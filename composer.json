@@ -1,7 +1,7 @@
 {
-    "name": "laravel/lumen",
-    "description": "The Laravel Lumen Framework.",
-    "keywords": ["framework", "laravel", "lumen"],
+    "name": "bunsha/equipment",
+    "description": "Gazingle Equipment",
+    "keywords": [],
     "license": "MIT",
     "type": "project",
     "require": {
@@ -10,6 +10,12 @@
         "laravel/lumen-framework": "5.7.*",
         "vlucas/phpdotenv": "~2.2"
     },
+    "repositories": [
+        {
+            "url": "https://github.com/bunsha/equipment.git",
+            "type": "git"
+        }
+    ],
     "require-dev": {
         "fzaninotto/faker": "~1.4",
         "phpunit/phpunit": "~7.0",
