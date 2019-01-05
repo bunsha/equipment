@@ -32,7 +32,6 @@ sudo chmod -R ug+rwx storage bootstrap
 composer update
 composer dump-autoload
 ```
-
 * Run from command line 
 ``` php artisan migrate:fresh --seed ```
 
