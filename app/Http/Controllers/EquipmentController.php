@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Equipment;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 
@@ -33,7 +34,11 @@ class EquipmentController extends Controller
         parent::__construct($request);
     }
 
-
+    /**
+     * Search in model by filters.
+     *
+     * @return Builder
+     */
     protected function _search(Request $request){
         $items = $this->item->whereNotNull('id');
         $items = $this->_searchInModel($this->item, $items);
@@ -70,18 +75,8 @@ class EquipmentController extends Controller
      * @return Response
      */
     public function get(Request $request, $id){
-        if(is_numeric($id)){
-            try{
-                $this->item =  $this->item->withTrashed()->find($id);
-                if($this->item){
-                    return $this->success($this->item);
-                }
-                return $this->notFound();
-            }catch(\Illuminate\Database\QueryException $ex){
-                return $this->serverError("Something went wrong. Please try again later");
-            }
-        }
-        return $this->wrongData('The "id" needs to be integer');
+        $this->item = $this->_getById($id);
+        return $this->success($this->item);
     }
 
     /**
@@ -90,10 +85,8 @@ class EquipmentController extends Controller
      */
     public function store(Request $request){
         $this->validate($request, $this->item->rules());
-        if($result = $this->item->create($request->all())){
-           return $this->get($request, $result->id);
-        }
-        return $this->serverError("Something went wrong. Please try again later");
+        $this->item = $this->item->create($request->all());
+        return $this->get($request, $this->item->id);
     }
 
     /**
@@ -103,10 +96,8 @@ class EquipmentController extends Controller
     public function update(Request $request, $id){
         $this->item = $this->_getById($id);
         $this->validate($request, $this->item->rules());
-        if($this->item->fill($request->all())->save()){
-            return $this->success($this->item);
-        }
-        return $this->serverError("Something went wrong. Please try again later");
+        $this->item->fill($request->all())->save();
+        return $this->success($this->item);
     }
 
     /**
@@ -128,7 +119,6 @@ class EquipmentController extends Controller
         $this->item->restore();
         return $this->success($this->item);
     }
-
 
     /**
      * Purge a specific resource.

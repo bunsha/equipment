@@ -27,7 +27,6 @@ $app->withFacades();
 
 $app->withEloquent();
 
-$app->register(Illuminate\Redis\RedisServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------

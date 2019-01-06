@@ -124,29 +124,29 @@ class Controller extends BaseController
                 $columns = explode(",",str_replace(' ', '', $request->get('columns')));
                 $items = $items->select($columns);
             }
-            if($request->with_trashed){
+            if($request->has('with_trashed')){
                 $items = $items->withTrashed();
             }
-            if($request->only_trashed){
+            if($request->has('only_trashed')){
                 $items = $items->onlyTrashed();
             }
-            if ($request->just_count){
+            if ($request->has('just_count')){
                 $count = $items->count();
                 return $this->success(['total' => $count]);
             }
-            if($request->limit){
+            if($request->has('limit')){
                 $items = $items->take($request->limit);
             }else{
                 $items = $items->take($this->maxResults);
             }
-            if($request->paginate)
+            if($request->has('paginate'))
                 return $this->success($items->paginate($request->paginate)->appends($request->all()));
             else{
                 $count = $items->count();
                 if($count <= $this->maxResults){
                     return $this->success($items->get());
                 }else{
-                    if($request->limit){
+                    if($request->has('limit')){
                         return $this->success($items->get());
                     }else{
                         return $this->success($items->paginate($this->maxResults)->appends(['total' => $count]));
