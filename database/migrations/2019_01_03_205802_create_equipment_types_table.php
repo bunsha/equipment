@@ -16,7 +16,7 @@ class CreateEquipmentTypesTable extends Migration
         Schema::create('equipment_types', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('account_id');
-            $table->string('name', 512);
+            $table->string('name', 512)->nullable(false);
             $table->string('description', 2048);
             $table->tinyInteger('insurance')->nullable();
             $table->tinyInteger('registration')->nullable();

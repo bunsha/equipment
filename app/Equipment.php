@@ -39,6 +39,31 @@ class Equipment extends Model
 
     ];
 
+    public $searchable = [
+        'name', 'serial', 'bar_code', 'type_id',
+        'status_id', 'account_id', 'purchased_at',
+        'last_service_at', 'next_service_at', 'insurance_valid_until',
+        'registration_renewal_at', 'created_at', 'updated_at'
+    ];
+
+    public function rules(){
+        return [
+            'account_id' => 'required|integer',
+            'type_id' => 'integer|exists:equipment_types,id',
+            'status_id' => 'integer|exists:equipment_statuses,id',
+            'name' => 'required|string|max:255',
+            'description' => 'string|max:2048',
+            'serial' => 'string|max:255',
+            'model' => 'string|max:255',
+            'bar_code' => 'string|max:128',
+            'purchased_at' => 'date',
+            'last_service_at' => 'date',
+            'next_service_at' => 'date',
+            'insurance_valid_until' => 'date',
+            'registration_renewal_at' => 'date',
+        ];
+    }
+
     public function status()
     {
         return $this->belongsTo(EquipmentStatus::class, 'status_id');

@@ -18,3 +18,12 @@ $router->get('/', function () use ($router) {
     ];
 });
 
+$router->group(['prefix' => 'equipment'], function ($route) {
+    $route->get('/', 'EquipmentController@index');
+    $route->post('/', 'EquipmentController@store');
+    $route->get('/{id}', 'EquipmentController@get');
+    $route->put('/{id}', 'EquipmentController@update');
+    $route->delete('/{id}', 'EquipmentController@delete');
+    $route->post('/{id}/restore', 'EquipmentController@restore');
+    $route->delete('/{id}/purge', 'EquipmentController@purge');
+});

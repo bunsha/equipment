@@ -28,6 +28,7 @@ $app->withFacades();
 $app->withEloquent();
 
 $app->register(Illuminate\Redis\RedisServiceProvider::class);
+
 /*
 |--------------------------------------------------------------------------
 | Register Container Bindings
@@ -38,6 +39,9 @@ $app->register(Illuminate\Redis\RedisServiceProvider::class);
 | your own bindings here if you like or you can make another file.
 |
 */
+
+/* Sentry */
+$app->register(Sentry\SentryLaravel\SentryLumenServiceProvider::class);
 
 $app->singleton(
     Illuminate\Contracts\Debug\ExceptionHandler::class,
