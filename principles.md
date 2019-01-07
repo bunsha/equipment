@@ -27,7 +27,6 @@ var equipment_meta = {
     searchable: true
 }
 ````
-
 * All Mutations can inherit each other.
 <br />
 <i>Problem: </i>
