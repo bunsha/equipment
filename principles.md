@@ -10,9 +10,9 @@ let mutation = {
   display_name: String, // Mutation display name
   type: String, // type of a mutated field. Example: select, input, text, date, etc.
   values: String, // Predefined values for a mutation
-  nullable: bool, // Allows null on a field
-  overrides: bool, // Determines if mutation is overriding an existing field, or creates a new one
-  hidden: bool // Visibility in responses
+  nullable: boolean, // Allows null on a field
+  overrides: boolean, // Determines if mutation is overriding an existing field, or creates a new one
+  hidden: boolean // Visibility in responses
 }
 ````
 
