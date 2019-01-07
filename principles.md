@@ -5,15 +5,17 @@
 * All services, except "Lead" can only communicate with Gateway and Messages/Events Hub
 * All services relations, expect "Lead" Service, should store relations data on its own.
 <br>
+As an example, to manage a connection from leads to equipment, 
+relational table should be placed under Equipment
 <b>Equipment and Leads relation example:</b>
 
 ````
-Equipment side                   Leads side
-----------------------           ----------------------
-lead_id | equipment_id           equipment_id | lead_id
-----------------------           ----------------------
-1       |  336                   336          |  1
-2       |  999                   999          |  2
+Equipment
+----------------------
+lead_id | equipment_id
+----------------------
+1       |  336
+2       |  999
 ````
 
 ### Models
