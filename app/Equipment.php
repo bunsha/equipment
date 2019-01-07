@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Lumen\Auth\Authorizable;
@@ -22,12 +23,13 @@ class Equipment extends Model
      */
     protected $fillable = [
         'name', 'description', 'serial', 'model', 'bar_code',
-        'type_id', 'account_id', 'status_id',
+        'type_id', 'account_id', 'status_id', 'purchased_at', 'last_service_at',
+        'next_service_at', 'insurance_valid_until', 'registration_renewal_at',
     ];
 
     protected $dates = [
-        'created_at', 'updated_at', 'deleted_at', 'purchased_at', 'last_service_at',
-         'next_service_at', 'insurance_valid_until', 'registration_renewal_at',
+        'created_at', 'updated_at', 'deleted_at',
+        'purchased_at', 'last_service_at', 'next_service_at', 'insurance_valid_until', 'registration_renewal_at',
     ];
 
     /**
@@ -63,6 +65,24 @@ class Equipment extends Model
             'registration_renewal_at' => 'date',
         ];
     }
+
+//    public function setRegistrationRenewalAtAttribute($date){
+//        $this->attributes['registration_renewal_at'] = Carbon::parse($date);
+//    }
+//    public function setInsuranceValidUntilAttribute($date){
+//        $this->attributes['insurance_valid_until'] = Carbon::parse($date);
+//    }
+//    public function setNextServiceAtAttribute($date){
+//        $this->attributes['next_service_at'] = Carbon::parse($date);
+//    }
+//    public function setLastServiceAtAttribute($date){
+//        $this->attributes['last_service_at'] = Carbon::parse($date);
+//    }
+//    public function setPurchasedAtAttribute($date){
+//        $this->attributes['purchased_at'] = Carbon::parse($date);
+//    }
+
+
 
     public function status()
     {

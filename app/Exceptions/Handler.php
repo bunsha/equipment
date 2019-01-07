@@ -87,6 +87,13 @@ class Handler extends ExceptionHandler
                 'time' => Carbon::now()
             ], 500);
         }
+        if($exception instanceof \InvalidArgumentException){
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Something went wrong. Please contact support',
+                'time' => Carbon::now()
+            ], 500);
+        }
         return parent::render($request, $exception);
     }
 }
