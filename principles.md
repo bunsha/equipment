@@ -1,6 +1,24 @@
 # Gazingle app main principles
 
 ## Relations
+### Services Relations
+* All services relations, expect "Lead" Service, should store relations data on its own.
+<br><b>Equipment relations example:</b>
+````
+Equipment belongs to many leads
+-------------------------
+| lead_id | equipment_id|
+-------------------------
+Equipment has many types
+-----------------------------------
+| equipment_id | equipment_type_id|
+-----------------------------------
+Equipment has many statuses
+-------------------------------------
+| equipment_id | equipment_status_id|
+-------------------------------------
+````
+
 ### Polymorphism
 * All services in app should register a models mutations as separate entity.
 * All Mutations has same structure
