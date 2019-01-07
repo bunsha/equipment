@@ -10,25 +10,28 @@ var mutation = {
   display_name: String, // Mutation display name
   type: String, // type of a mutated field. Example: select, input, text, date, etc.
   values: String, // Predefined values for a mutation
-  nullable: boolean, // Allows null on a field
-  overrides: boolean, // Determines if mutation is overriding an existing field, or creates a new one
-  hidden: boolean // Visibility in responses
+  nullable: Boolean, // Allows null on a field
+  overrides: Boolean, // Determines if mutation is overriding an existing field, or creates a new one
+  hidden: Boolean, // Visibility in responses
+  searchable: Boolean // Determines if model can be found by this field
 }
-````
-
-````javascript
-//Set mutation table
-{
-  key: String,
-  value: String
+// Example Mutation object
+var equipment_meta = {
+  name: 'last_service_at',
+  display_name: 'Last service at',
+  type: 'date',
+  values: '',
+  nullable: true,
+  overrides: false, 
+  hidden: false 
 }
 ````
 
 * All Mutations can inherit each other
 * All entities in app should contain "meta" field, which is a storage of a model mutator data.
 #####Meta object structure
-````json
-{
+````javascript
+var meta = {
   key: String,
   value: String
 }
