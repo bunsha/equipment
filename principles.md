@@ -6,6 +6,7 @@
 * All services relations, expect "Lead" Service, should store relations data on its own.
 <br>
 <b>Equipment and Leads relation example:</b>
+
 ````
 Equipment belongs to many leads
 ----------------------
