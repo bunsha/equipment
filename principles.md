@@ -8,10 +8,12 @@
 <b>Equipment and Leads relation example:</b>
 
 ````
-Equipment belongs to many leads
-----------------------
-lead_id | equipment_id
-----------------------
+Equipment side                   Leads side
+----------------------           ----------------------
+lead_id | equipment_id           equipment_id | lead_id
+----------------------           ----------------------
+1       |  336                   336          |  1
+2       |  999                   999          |  2
 ````
 
 ### Models
