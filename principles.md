@@ -4,7 +4,7 @@
 ### Polymorphism
 * All services in app should register a models mutations as separate entity.
 * All Mutations has same structure
-````javascript
+````ecmascript 6
 let mutation = {
   name: String, // field key
   display_name: String, // Mutation display name
