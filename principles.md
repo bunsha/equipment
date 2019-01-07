@@ -30,6 +30,7 @@ var equipment_meta = {
 
 * All Mutations can inherit each other
 ````javascript
+// Mutation for Contacts Model
 var contacts_meta = {
     name: 'first_name',
     display_name: 'First Name',
@@ -40,6 +41,8 @@ var contacts_meta = {
     hidden: false,
     searchable: true
 }
+
+// Mutation for Contacts Model, which is modified for Vendor Model 
 var vendors_contacts_meta = {
     name: 'first_name',
     display_name: 'Given Name',
@@ -49,15 +52,14 @@ var vendors_contacts_meta = {
     overrides: true, 
     hidden: false,
     searchable: false
-  /* ... */
 }
 ````
 * All entities in app should contain "meta" field, which is a storage of a model mutator data.
 #####Meta object structure
 ````javascript
 var meta = {
-  key: String,
-  value: String
+  key: String, // "name" field from Model Mutation 
+  value: String // value of "name" field, for this specific instance of a Model
 }
 ````
 
