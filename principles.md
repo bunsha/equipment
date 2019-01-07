@@ -7,15 +7,15 @@
 ````
 Equipment belongs to many leads
 -------------------------
-| lead_id | equipment_id|
+ lead_id | equipment_id
 -------------------------
 Equipment has many types
 -----------------------------------
-| equipment_id | equipment_type_id|
+ equipment_id | equipment_type_id
 -----------------------------------
 Equipment has many statuses
 -------------------------------------
-| equipment_id | equipment_status_id|
+ equipment_id | equipment_status_id
 -------------------------------------
 ````
 
