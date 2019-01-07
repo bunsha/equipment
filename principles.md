@@ -4,8 +4,8 @@
 ### Polymorphism
 * All services in app should register a models mutations as separate entity.
 * All Mutations has same structure
-````json
-{
+````javascript
+let mutation = {
   name: String, // field key
   display_name: String, // Mutation display name
   type: String, // type of a mutated field. Example: select, input, text, date, etc.
