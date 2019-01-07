@@ -4,7 +4,8 @@
 ### Services Relations
 * All services, except "Lead" can only communicate with Gateway and Messages/Events Hub
 * All services relations, expect "Lead" Service, should store relations data on its own.
-<br><b>Equipment relations example:</b>
+<br>
+<b>Equipment and Leads relation example:</b>
 ````
 Equipment belongs to many leads
 ----------------------
