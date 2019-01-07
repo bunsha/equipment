@@ -28,7 +28,9 @@ var equipment_meta = {
 }
 ````
 
-* All Mutations can inherit each other
+* All Mutations can inherit each other.
+<br />
+<i>Problem: </i>
 ````javascript
 // Mutation for Contacts Model
 var contacts_meta = {
