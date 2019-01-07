@@ -2,24 +2,18 @@
 
 ## Relations
 ### Services Relations
+* All services, except "Lead" can only communicate with Gateway and Messages/Events Hub
 * All services relations, expect "Lead" Service, should store relations data on its own.
 <br><b>Equipment relations example:</b>
 ````
 Equipment belongs to many leads
--------------------------
- lead_id | equipment_id
--------------------------
-Equipment has many types
------------------------------------
- equipment_id | equipment_type_id
------------------------------------
-Equipment has many statuses
--------------------------------------
- equipment_id | equipment_status_id
--------------------------------------
+----------------------
+lead_id | equipment_id
+----------------------
 ````
 
-### Polymorphism
+### Models
+#### Polymorphism
 * All services in app should register a models mutations as separate entity.
 * All Mutations has same structure
 ````javascript
