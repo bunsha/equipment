@@ -66,24 +66,6 @@ class Equipment extends Model
         ];
     }
 
-//    public function setRegistrationRenewalAtAttribute($date){
-//        $this->attributes['registration_renewal_at'] = Carbon::parse($date);
-//    }
-//    public function setInsuranceValidUntilAttribute($date){
-//        $this->attributes['insurance_valid_until'] = Carbon::parse($date);
-//    }
-//    public function setNextServiceAtAttribute($date){
-//        $this->attributes['next_service_at'] = Carbon::parse($date);
-//    }
-//    public function setLastServiceAtAttribute($date){
-//        $this->attributes['last_service_at'] = Carbon::parse($date);
-//    }
-//    public function setPurchasedAtAttribute($date){
-//        $this->attributes['purchased_at'] = Carbon::parse($date);
-//    }
-
-
-
     public function status()
     {
         return $this->belongsTo(EquipmentStatus::class, 'status_id');

@@ -18,10 +18,10 @@ class CreateEquipmentTypesTable extends Migration
             $table->unsignedInteger('account_id');
             $table->string('name', 512)->nullable(false);
             $table->string('description', 2048);
-            $table->tinyInteger('insurance')->nullable();
-            $table->tinyInteger('registration')->nullable();
-            $table->tinyInteger('service')->nullable();
-            $table->timestampTz('deleted_at')->nullable();
+//            $table->tinyInteger('insurance')->nullable();
+//            $table->tinyInteger('registration')->nullable();
+//            $table->tinyInteger('service')->nullable();
+//            $table->timestampTz('deleted_at')->nullable();
             $table->timestampsTz();
 
             $table->index('account_id');

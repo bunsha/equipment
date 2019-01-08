@@ -25,9 +25,9 @@ class EquipmentTableSeeder extends Seeder
             ->whereIn('id', $temp)
             ->update(['is_default' => 1]);
 
-        factory(App\EquipmentType::class, 1000)->create()->each(function ($type) {
+        factory(App\EquipmentType::class, 100)->create()->each(function ($type) {
             $type->equipment()->saveMany(factory(App\Equipment::class, rand(1,30))->create()->each(function($equipment){
-                $equipment->history()->saveMany(factory(App\EquipmentHistory::class, rand(0,50))->make());
+                $equipment->history()->saveMany(factory(App\EquipmentHistory::class, rand(1,50))->make());
             }));
         });
     }

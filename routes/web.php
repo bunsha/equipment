@@ -18,6 +18,17 @@ $router->get('/', function () use ($router) {
     ];
 });
 
+
+$router->group(['prefix' => 'equipment/statuses'], function ($route) {
+    $route->get('/', 'EquipmentStatusesController@index');
+    $route->post('/', 'EquipmentStatusesController@store');
+    $route->get('/{id}', 'EquipmentStatusesController@get');
+    $route->put('/{id}', 'EquipmentStatusesController@update');
+    $route->delete('/{id}', 'EquipmentStatusesController@delete');
+    $route->post('/{id}/restore', 'EquipmentStatusesController@restore');
+    $route->delete('/{id}/purge', 'EquipmentStatusesController@destroy');
+});
+
 $router->group(['prefix' => 'equipment'], function ($route) {
     $route->get('/', 'EquipmentController@index');
     $route->post('/', 'EquipmentController@store');
@@ -25,5 +36,10 @@ $router->group(['prefix' => 'equipment'], function ($route) {
     $route->put('/{id}', 'EquipmentController@update');
     $route->delete('/{id}', 'EquipmentController@delete');
     $route->post('/{id}/restore', 'EquipmentController@restore');
-    $route->delete('/{id}/purge', 'EquipmentController@purge');
+    $route->delete('/{id}/purge', 'EquipmentController@destroy');
+    $route->get('/{id}/history', 'EquipmentController@getHistory');
+    $route->get('/{id}/history/attached', 'EquipmentController@getAttachedHistory');
+    $route->get('/{id}/history/detached', 'EquipmentController@getDetachedHistory');
+    $route->post('/{id}/attach', 'EquipmentController@attach');
+    $route->post('/{id}/detach', 'EquipmentController@detach');
 });

@@ -154,8 +154,8 @@ class Controller extends BaseController
                 }
             }
         }catch(\Exception $ex){
-            return $this->serverError($ex->getMessage());
-            //return $this->serverError('Wrong filters provided. Please check documentation');
+            //return $this->serverError($ex->getMessage());
+            return $this->serverError('Wrong filters provided. Please check documentation');
         }
     }
 }

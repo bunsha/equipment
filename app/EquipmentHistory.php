@@ -20,11 +20,11 @@ class EquipmentHistory extends Model
      * @var array
      */
     protected $fillable = [
-        'equipment_id', 'lead_id', 'service',
+        'equipment_id', 'service_id', 'user_id','service', 'attached_at', 'detached_at', 'deleted_at'
     ];
 
     protected $dates = [
-        'created_at', 'updated_at', 'deleted_at', 'placed_at', 'removed_at',
+        'created_at', 'updated_at', 'deleted_at', 'attached_at', 'detached_at',
     ];
 
     /**

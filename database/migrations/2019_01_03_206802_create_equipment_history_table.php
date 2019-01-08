@@ -16,12 +16,15 @@ class CreateEquipmentHistoryTable extends Migration
         Schema::create('equipment_history', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('equipment_id');
-            $table->unsignedInteger('lead_id');
-            $table->timestamp('placed_at')->nullable();
-            $table->timestamp('removed_at')->nullable();
+            $table->unsignedInteger('service_id');
+            $table->unsignedInteger('user_id');
+            $table->string('service', 255);
+            $table->timestamp('attached_at')->nullable();
+            $table->timestamp('detached_at')->nullable();
             $table->timestampsTz();
 
-            $table->index('lead_id');
+            $table->index('service_id');
+            $table->index('user_id');
         });
 
         Schema::table('equipment_history', function($table) {

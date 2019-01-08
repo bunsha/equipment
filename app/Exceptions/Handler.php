@@ -94,6 +94,14 @@ class Handler extends ExceptionHandler
                 'time' => Carbon::now()
             ], 500);
         }
+        if($exception instanceof ValidationException){
+            return new JsonResponse([
+                'success' => false,
+                'message' => $exception->getMessage(),
+                'errors' => $exception->getResponse()->original,
+                'time' => Carbon::now()
+            ], 500);
+        }
         return parent::render($request, $exception);
     }
 }

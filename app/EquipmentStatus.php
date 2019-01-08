@@ -21,12 +21,25 @@ class EquipmentStatus extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'description', 'account_id', 'is_available',
+        'name', 'description', 'account_id', 'is_available', 'deleted_at',
     ];
 
     protected $dates = [
         'created_at', 'updated_at', 'deleted_at',
     ];
+
+    public $searchable = [
+        'name'
+    ];
+
+    public function rules(){
+        return [
+            'account_id' => 'required|integer',
+            'is_available' => 'required|integer',
+            'name' => 'required|string|max:255',
+            'description' => 'string|max:2048',
+        ];
+    }
 
     /**
      * The attributes excluded from the model's JSON form.
