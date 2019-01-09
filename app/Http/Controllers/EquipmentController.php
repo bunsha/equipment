@@ -115,6 +115,7 @@ class EquipmentController extends Controller
 
     /**
      * Restore a soft-deleted specific resource.
+     * @ToDo deal with restore UNIQUE ID collision
      * @return Response
      */
     public function restore(Request $request, $id){
