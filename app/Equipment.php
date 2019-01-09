@@ -43,9 +43,7 @@ class Equipment extends Model
 
     public $searchable = [
         'name', 'serial', 'bar_code', 'type_id',
-        'status_id', 'account_id', 'purchased_at',
-        'last_service_at', 'next_service_at', 'insurance_valid_until',
-        'registration_renewal_at', 'created_at', 'updated_at'
+        'status_id', 'account_id',  'created_at', 'updated_at'
     ];
 
     public function rules(){
@@ -58,11 +56,6 @@ class Equipment extends Model
             'serial' => 'string|max:255',
             'model' => 'string|max:255',
             'bar_code' => 'string|max:128',
-            'purchased_at' => 'date',
-            'last_service_at' => 'date',
-            'next_service_at' => 'date',
-            'insurance_valid_until' => 'date',
-            'registration_renewal_at' => 'date',
         ];
     }
 

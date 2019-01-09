@@ -26,23 +26,23 @@ lead_id | equipment_id
 var mutation = {
     name: String, // field key
     display_name: String, // Mutation display name
-    type: String, // type of a mutated field. Example: select, input, text, date, etc.
-    values: String, // Predefined values for a mutation
-    nullable: Boolean, // Allows null on a field
-    overrides: Boolean, // Determines if mutation is overriding an existing field, or creates a new one
-    hidden: Boolean, // Visibility in responses
-    searchable: Boolean // Determines if model can be found by this field
+    data_type: String, // type of a mutated field. Example: select, input, text, date, etc.
+    values: JSON, // Predefined values for a mutation
+    is_nullable: Boolean, // Allows null on a field
+    is_replace: Boolean, // Determines if mutation is overriding an existing field, or creates a new one
+    is_hidden: Boolean, // Visibility in responses
+    is_searchable: Boolean // Determines if model can be found by this field
 }
 // Example Mutation object
 var equipment_meta = {
     name: 'last_service_at',
     display_name: 'Last service at',
-    type: 'date',
+    data_type: 'date',
     values: '',
-    nullable: true,
-    overrides: false, 
-    hidden: false,
-    searchable: true
+    is_nullable: true,
+    is_replace: false, 
+    is_hidden: false,
+    is_searchable: true
 }
 ````
 * All Mutations can inherit each other.
@@ -53,24 +53,24 @@ var equipment_meta = {
 var contacts_meta = {
     name: 'first_name',
     display_name: 'First Name',
-    type: 'text',
+    data_type: 'text',
     values: '',
-    nullable: true,
-    overrides: false, 
-    hidden: false,
-    searchable: true
+    is_nullable: true,
+    is_replace: false, 
+    is_hidden: false,
+    is_searchable: true
 }
 
 // Mutation for Contacts Model, which is modified for Vendor Model 
 var vendors_contacts_meta = {
     name: 'first_name',
     display_name: 'Given Name',
-    type: 'text',
+    data_type: 'text',
     values: '',
-    nullable: false,
-    overrides: true, 
-    hidden: false,
-    searchable: false
+    is_nullable: false,
+    is_replace: false, 
+    is_hidden: false,
+    is_searchable: false
 }
 ````
 * All entities in app should contain "meta" field, which is a storage of a model mutator data.

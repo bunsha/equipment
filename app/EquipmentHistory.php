@@ -38,6 +38,6 @@ class EquipmentHistory extends Model
 
     public function equipment()
     {
-        return $this->belongsTo(Equipment::class, 'equipment_id');
+        return $this->hasMany(Equipment::class, 'equipment_id');
     }
 }
