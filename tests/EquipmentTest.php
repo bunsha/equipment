@@ -97,39 +97,5 @@ class EquipmentTest extends TestCase
             ]
         );
     }
-//
-//    /**
-//     * /products/id [PUT]
-//     */
-//    public function testShouldUpdate(){
-//        $parameters = [
-//            'product_name' => 'Infinix Hot Note',
-//            'product_description' => 'Champagne Gold, 13M AF + 8M FF 4G Smartphone',
-//        ];
-//        $this->put("products/4", $parameters, []);
-//        $this->seeStatusCode(200);
-//        $this->seeJsonStructure(
-//            ['data' =>
-//                [
-//                    'product_name',
-//                    'product_description',
-//                    'created_at',
-//                    'updated_at',
-//                    'links'
-//                ]
-//            ]
-//        );
-//    }
-//    /**
-//     * /products/id [DELETE]
-//     */
-//    public function testShouldDelete(){
-//
-//        $this->delete("products/5", [], []);
-//        $this->seeStatusCode(410);
-//        $this->seeJsonStructure([
-//            'status',
-//            'message'
-//        ]);
-//    }
+
 }
