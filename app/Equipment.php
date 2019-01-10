@@ -58,7 +58,6 @@ class Equipment extends Model
             'bar_code' => 'string|max:128',
         ];
     }
-
     public function updateRules(){
         return [
             'account_id' => 'integer',
@@ -71,6 +70,12 @@ class Equipment extends Model
             'bar_code' => 'string|max:128',
         ];
     }
+    public function getTableName(){
+        return $this->table;
+    }
+
+
+
     public function status()
     {
         return $this->belongsTo(EquipmentStatus::class, 'status_id');

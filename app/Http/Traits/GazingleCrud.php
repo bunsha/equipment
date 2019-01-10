@@ -2,6 +2,11 @@
 
 namespace App\Http\Traits;
 
+use App\Events\ModelCreatedEvent;
+use App\Events\ModelDeletedEvent;
+use App\Events\ModelPurgedEvent;
+use App\Events\ModelRestoredEvent;
+use App\Events\ModelUpdatedEvent;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
@@ -48,7 +53,7 @@ trait GazingleCrud {
     /**
      * Set current item as DB entity. Ignores soft-deletes
      *
-     * @return Response
+     * @return Model
      */
     protected function _getById($id){
         $model = self::MODEL;
@@ -77,7 +82,9 @@ trait GazingleCrud {
         $this->item = new $model();
         $this->validate($request, $this->item->createRules());
         $this->item = $this->item->create($request->all());
-        return $this->get($request, $this->item->id);
+        $this->item = $this->_getById($this->item->id);
+        event(new ModelCreatedEvent($this->item));
+        return $this->success($this->item);
     }
 
     /**
@@ -88,6 +95,7 @@ trait GazingleCrud {
         $this->item = $this->_getById($id);
         $this->validate($request, $this->item->updateRules());
         $this->item->fill($request->all())->save();
+        event(new ModelUpdatedEvent($this->item));
         return $this->success($this->item);
     }
 
@@ -98,6 +106,7 @@ trait GazingleCrud {
     public function delete(Request $request, $id){
         $this->item = $this->_getById($id);
         $this->item->delete();
+        event(new ModelDeletedEvent($this->item));
         return $this->success($this->item);
     }
 
@@ -109,6 +118,7 @@ trait GazingleCrud {
     public function restore(Request $request, $id){
         $this->item = $this->_getById($id);
         $this->item->restore();
+        event(new ModelRestoredEvent($this->item));
         return $this->success($this->item);
     }
 
@@ -120,6 +130,7 @@ trait GazingleCrud {
         $this->item = $this->_getById($id);
         try{
             $this->item->forceDelete();
+            event(new ModelPurgedEvent($this->item));
         }catch(QueryException $exception){
             return $this->wrongData('Unable to purge item. Please Detach all connections first');
         }
