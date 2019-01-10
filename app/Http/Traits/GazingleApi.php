@@ -16,13 +16,6 @@ trait GazingleApi {
     public $search_params = [];
     public $maxResults = 200;
 
-    public function __construct(Request $request){
-        $this->time = Carbon::now();
-        $this->request = $request->all();
-        foreach($this->request as $param => $value){
-            $this->request_names[] = $param;
-        }
-    }
 
     /**
      * Determine if request contains a filters

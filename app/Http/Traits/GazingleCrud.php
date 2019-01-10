@@ -15,22 +15,6 @@ trait GazingleCrud {
     public $item;
     public $model;
 
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct(Request $request){
-        if($request->has('columns')){
-            $columns = explode(",",str_replace(' ', '', $request->get('columns')));
-            foreach ($columns as $i => $column) {
-                if(!in_array($columns[$i], $this->item->searchable)){
-                    unset($columns[$i]);
-                }
-            }
-            $request['columns'] = implode(',', $columns);
-        }
-    }
 
     /**
      * Search in model by filters.
