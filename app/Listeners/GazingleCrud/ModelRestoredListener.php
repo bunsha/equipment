@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Listeners;
+namespace App\Listeners\GazingleCrud;
 
 
 use App\Events\GazingleCrud\ModelRestoredEvent;
@@ -30,5 +30,17 @@ class ModelRestoredListener implements ShouldQueue
     public function handle(ModelRestoredEvent $event)
     {
 
+    }
+
+    /**
+     * Handle a job failure.
+     *
+     * @param  ModelRestoredEvent  $event
+     * @param  \Exception  $exception
+     * @return void
+     */
+    public function failed(ModelRestoredEvent $event, $exception)
+    {
+        //
     }
 }

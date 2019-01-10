@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Listeners;
+namespace App\Listeners\GazingleCrud;
 
 use App\Events\GazingleCrud\ModelUpdatedEvent;
 use Illuminate\Queue\InteractsWithQueue;
@@ -29,5 +29,17 @@ class ModelUpdatedListener implements ShouldQueue
     public function handle(ModelUpdatedEvent $event)
     {
 
+    }
+
+    /**
+     * Handle a job failure.
+     *
+     * @param  ModelUpdatedEvent  $event
+     * @param  \Exception  $exception
+     * @return void
+     */
+    public function failed(ModelUpdatedEvent $event, $exception)
+    {
+        //
     }
 }

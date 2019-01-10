@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Listeners;
+namespace App\Listeners\GazingleCrud;
 
 use App\Events\GazingleCrud\ModelPurgedEvent;
 use Illuminate\Queue\InteractsWithQueue;
@@ -29,5 +29,17 @@ class ModelPurgedListener implements ShouldQueue
     public function handle(ModelPurgedEvent $event)
     {
 
+    }
+
+    /**
+     * Handle a job failure.
+     *
+     * @param  ModelPurgedEvent  $event
+     * @param  \Exception  $exception
+     * @return void
+     */
+    public function failed(ModelPurgedEvent $event, $exception)
+    {
+        //
     }
 }
