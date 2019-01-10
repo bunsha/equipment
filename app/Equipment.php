@@ -46,7 +46,7 @@ class Equipment extends Model
         'status_id', 'account_id',  'created_at', 'updated_at'
     ];
 
-    public function rules(){
+    public function createRules(){
         return [
             'account_id' => 'required|integer',
             'type_id' => 'integer|exists:equipment_types,id',
@@ -59,6 +59,18 @@ class Equipment extends Model
         ];
     }
 
+    public function updateRules(){
+        return [
+            'account_id' => 'integer',
+            'type_id' => 'integer|exists:equipment_types,id',
+            'status_id' => 'integer|exists:equipment_statuses,id',
+            'name' => 'string|max:255',
+            'description' => 'string|max:2048',
+            'serial' => 'string|max:255',
+            'model' => 'string|max:255',
+            'bar_code' => 'string|max:128',
+        ];
+    }
     public function status()
     {
         return $this->belongsTo(EquipmentStatus::class, 'status_id');
