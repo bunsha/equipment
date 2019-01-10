@@ -13,19 +13,19 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'App\Events\ModelCreatedEvent' => [
+        'App\Events\GazingleCrud\ModelCreatedEvent' => [
             'App\Listeners\ModelCreatedListener',
         ],
-        'App\Events\ModelUpdatedEvent' => [
+        'App\Events\GazingleCrud\ModelUpdatedEvent' => [
             'App\Listeners\ModelUpdatedListener',
         ],
-        'App\Events\ModelDeletedEvent' => [
+        'App\Events\GazingleCrud\ModelDeletedEvent' => [
             'App\Listeners\ModelDeletedListener',
         ],
-        'App\Events\ModelRestoredEvent' => [
+        'App\Events\GazingleCrud\ModelRestoredEvent' => [
             'App\Listeners\ModelRestoredListener',
         ],
-        'App\Events\ModelPurgedEvent' => [
+        'App\Events\GazingleCrud\ModelPurgedEvent' => [
             'App\Listeners\ModelPurgedListener',
         ],
     ];

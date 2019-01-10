@@ -2,9 +2,7 @@
 
 namespace App\Listeners;
 
-use App\Events\ExampleEvent;
-use App\Events\ModelDeletedEvent;
-use App\Events\ModelUpdatedEvent;
+use App\Events\GazingleCrud\ModelDeletedEvent;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 

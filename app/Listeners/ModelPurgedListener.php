@@ -2,9 +2,7 @@
 
 namespace App\Listeners;
 
-use App\Events\ExampleEvent;
-use App\Events\ModelPurgedEvent;
-use App\Events\ModelUpdatedEvent;
+use App\Events\GazingleCrud\ModelPurgedEvent;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 

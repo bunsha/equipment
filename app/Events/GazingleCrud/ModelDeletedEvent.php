@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Events;
+namespace App\Events\GazingleCrud;
 
+use App\Events\Event;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Queue\SerializesModels;
 
-class ModelUpdatedEvent extends Event  implements ShouldQueue
+class ModelDeletedEvent extends Event  implements ShouldQueue
 {
 
     use InteractsWithSockets, SerializesModels;

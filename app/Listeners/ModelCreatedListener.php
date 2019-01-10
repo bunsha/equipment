@@ -2,8 +2,7 @@
 
 namespace App\Listeners;
 
-use App\Events\ExampleEvent;
-use App\Events\ModelCreatedEvent;
+use App\Events\GazingleCrud\ModelCreatedEvent;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 

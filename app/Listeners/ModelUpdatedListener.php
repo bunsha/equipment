@@ -2,8 +2,7 @@
 
 namespace App\Listeners;
 
-use App\Events\ExampleEvent;
-use App\Events\ModelUpdatedEvent;
+use App\Events\GazingleCrud\ModelUpdatedEvent;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 

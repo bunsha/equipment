@@ -2,11 +2,11 @@
 
 namespace App\Http\Traits;
 
-use App\Events\ModelCreatedEvent;
-use App\Events\ModelDeletedEvent;
-use App\Events\ModelPurgedEvent;
-use App\Events\ModelRestoredEvent;
-use App\Events\ModelUpdatedEvent;
+use App\Events\GazingleCrud\ModelCreatedEvent;
+use App\Events\GazingleCrud\ModelDeletedEvent;
+use App\Events\GazingleCrud\ModelPurgedEvent;
+use App\Events\GazingleCrud\ModelRestoredEvent;
+use App\Events\GazingleCrud\ModelUpdatedEvent;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
