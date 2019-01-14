@@ -24,8 +24,10 @@ class Equipment extends Model
     protected $fillable = [
         'name', 'description', 'serial', 'model', 'bar_code',
         'type_id', 'account_id', 'status_id', 'purchased_at', 'last_service_at',
-        'next_service_at', 'insurance_valid_until', 'registration_renewal_at',
+        'next_service_at', 'insurance_valid_until', 'registration_renewal_at', 'meta'
     ];
+
+    protected $casts = ['meta' => 'array'];
 
     protected $dates = [
         'created_at', 'updated_at', 'deleted_at',
@@ -45,6 +47,8 @@ class Equipment extends Model
         'name', 'serial', 'bar_code', 'type_id',
         'status_id', 'account_id',  'created_at', 'updated_at'
     ];
+
+    public $mutates = true;
 
     public function createRules(){
         return [

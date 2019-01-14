@@ -28,6 +28,7 @@ class CreateEquipmentTable extends Migration
             $table->timestampTz('next_service_at')->nullable();
             $table->timestampTz('insurance_valid_until')->nullable();
             $table->timestampTz('registration_renewal_at')->nullable();
+            $table->json('meta')->nullable();
             $table->timestampTz('deleted_at')->nullable();
             $table->timestampsTz();
 

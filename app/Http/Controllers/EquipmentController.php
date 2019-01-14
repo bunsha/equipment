@@ -17,7 +17,6 @@ class EquipmentController extends Controller
 
     const MODEL = Equipment::class;
 
-
     /**
      * Create a new controller instance.
      *

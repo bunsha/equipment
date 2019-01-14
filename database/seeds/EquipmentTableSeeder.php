@@ -13,6 +13,7 @@ class EquipmentTableSeeder extends Seeder
     public function run()
     {
         factory(App\EquipmentStatus::class, 100)->create();
+        factory(App\EquipmentMutation::class, 10)->create();
         $futureDefault = DB::table('equipment_statuses')
             ->select(DB::raw('min(id) as id'))
             ->groupBy('account_id')

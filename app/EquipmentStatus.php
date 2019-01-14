@@ -40,6 +40,25 @@ class EquipmentStatus extends Model
             'description' => 'string|max:2048',
         ];
     }
+    public function createRules(){
+        return [
+            'account_id' => 'required|integer',
+            'is_available' => 'required|integer',
+            'name' => 'required|string|max:255',
+            'description' => 'string|max:2048',
+        ];
+    }
+    public function updateRules(){
+        return [
+            'account_id' => 'integer',
+            'is_available' => 'integer',
+            'name' => 'string|max:255',
+            'description' => 'string|max:2048',
+        ];
+    }
+    public function getTableName(){
+        return $this->table;
+    }
 
     /**
      * The attributes excluded from the model's JSON form.

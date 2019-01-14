@@ -11,6 +11,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 
 trait GazingleCrud {
@@ -50,6 +51,27 @@ trait GazingleCrud {
         return $this->returnParsed($items, $request);
     }
 
+
+    /**
+     * Update model instance according to mutation mapper
+     *
+     * @return Model
+     */
+    protected function _applyMutations($item){
+        $model = self::MODEL;
+        $entity = new $model();
+        $mutations = false;
+        if(isset($entity->mutates) && $entity->mutates){
+            $mutations = DB::select("SELECT * FROM ".$entity->getTable()."_mutations WHERE account_id = ".$item->account_id);
+            $attachMutations = [];
+            $editMutations = [];
+            foreach($mutations as $mutation){
+
+            }
+        }
+        return $item;
+    }
+
     /**
      * Set current item as DB entity. Ignores soft-deletes
      *
@@ -59,6 +81,7 @@ trait GazingleCrud {
         $model = self::MODEL;
         $this->item = new $model();
         $this->item = $model::withTrashed()->findOrFail($id);
+        //$this->item = $this->_applyMutations($this->item);
         return $this->item;
     }
 

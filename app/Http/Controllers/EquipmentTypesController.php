@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Equipment;
 use App\EquipmentHistory;
 use App\EquipmentStatus;
+use App\EquipmentType;
 use App\Http\Traits\GazingleCrud;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -12,11 +13,11 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 
-class EquipmentStatusesController extends Controller
+class EquipmentTypesController extends Controller
 {
 
     use GazingleCrud;
-    const MODEL = EquipmentStatus::class;
+    const MODEL = EquipmentType::class;
 
     /**
      * Create a new controller instance.

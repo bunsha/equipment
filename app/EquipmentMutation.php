@@ -9,11 +9,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 
-class EquipmentType extends Model
+class EquipmentMutation extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'equipment_types';
+    protected $table = 'equipment_mutations';
 
     /**
      * The attributes that are mass assignable.
@@ -21,7 +21,7 @@ class EquipmentType extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'description', 'account_id',
+        'name', 'display_name', 'data_type', 'values', 'is_nullable', 'is_replace', 'is_hidden', 'account_id', 'deleted_at'
     ];
 
     protected $dates = [
@@ -37,28 +37,35 @@ class EquipmentType extends Model
 
     ];
 
+    protected $casts = [
+        'values' => 'array'
+    ];
+
     public function createRules(){
         return [
-            'account_id' => 'required|integer',
             'name' => 'required|string|max:255',
-            'description' => 'string|max:2048',
+            'display_name' => 'required|string|max:255',
+            'data_type' => 'required|string|max:128',
+            'values' => 'json',
+            'is_nullable' => 'boolean',
+            'is_replace' => 'boolean',
+            'is_hidden' => 'boolean',
+            'account_id' => 'required|integer',
         ];
     }
-
     public function updateRules(){
         return [
-            'account_id' => 'integer',
             'name' => 'string|max:255',
-            'description' => 'string|max:2048',
+            'display_name' => 'string|max:255',
+            'data_type' => 'string|max:128',
+            'values' => 'json',
+            'is_nullable' => 'boolean',
+            'is_replace' => 'boolean',
+            'is_hidden' => 'boolean',
+            'account_id' => 'integer',
         ];
     }
-
     public function getTableName(){
         return $this->table;
-    }
-
-    public function equipment()
-    {
-        return $this->hasMany(Equipment::class, 'type_id');
     }
 }

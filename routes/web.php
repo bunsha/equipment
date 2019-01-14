@@ -29,6 +29,16 @@ $router->group(['prefix' => 'equipment/statuses'], function ($route) {
     $route->delete('/{id}/purge', 'EquipmentStatusesController@destroy');
 });
 
+$router->group(['prefix' => 'equipment/mutations'], function ($route) {
+    $route->get('/', 'EquipmentMutationsController@index');
+    $route->post('/', 'EquipmentMutationsController@store');
+    $route->get('/{id}', 'EquipmentMutationsController@get');
+    $route->put('/{id}', 'EquipmentMutationsController@update');
+    $route->delete('/{id}', 'EquipmentMutationsController@delete');
+    $route->post('/{id}/restore', 'EquipmentMutationsController@restore');
+    $route->delete('/{id}/purge', 'EquipmentMutationsController@destroy');
+});
+
 $router->group(['prefix' => 'equipment'], function ($route) {
     $route->get('/', 'EquipmentController@index');
     $route->post('/', 'EquipmentController@store');
