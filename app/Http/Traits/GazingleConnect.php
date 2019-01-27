@@ -10,8 +10,6 @@ use \GuzzleHttp\Client;
 
 trait GazingleConnect {
 
-    public $item;
-    public $model;
     protected $servers = [
         'equipment' => [
             'url' => 'http://microservices.equipment',

@@ -37,6 +37,10 @@ class EquipmentType extends Model
 
     ];
 
+    public $searchable = [
+        'name'
+    ];
+
     public function createRules(){
         return [
             'account_id' => 'required|integer',

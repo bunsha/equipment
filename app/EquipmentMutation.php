@@ -41,6 +41,10 @@ class EquipmentMutation extends Model
         'values' => 'array'
     ];
 
+    public $searchable = [
+        'name'
+    ];
+
     public function createRules(){
         return [
             'name' => 'required|string|max:255',

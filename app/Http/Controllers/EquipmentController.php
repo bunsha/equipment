@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Equipment;
 use App\EquipmentHistory;
+use App\Http\Traits\GazingleConnect;
 use App\Http\Traits\GazingleCrud;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -14,8 +15,10 @@ use Illuminate\Support\Facades\Response;
 class EquipmentController extends Controller
 {
     use GazingleCrud;
+    use GazingleConnect;
 
     const MODEL = Equipment::class;
+    public $token = false;
 
     /**
      * Create a new controller instance.
@@ -126,5 +129,18 @@ class EquipmentController extends Controller
         }catch(QueryException $e){
             return $this->serverError('Something went wrong. Please check a documentation');
         }
+    }
+
+    /*
+     * Temporary function to play with new features
+     */
+    public function play(Request $request){
+        //return $this->indexFrom('equipment', ['name_like' => 'nostrum']);
+        //return $this->getFrom('equipment', 13123123123);
+        //return $this->createFrom('equipment', 1);
+        //return $this->updateFrom('equipment', 1, ['name' => 'nostrum1']);
+        //return $this->deleteFrom('equipment', 1);
+        //return $this->restoreFrom('equipment', 1);
+        //return $this->purgeFrom('equipment', 123);
     }
 }
