@@ -39,7 +39,7 @@ trait GazingleMutation {
      *
      * @return Model
      */
-    public function applyInternalMutations($item, $account_id = true){
+    public function applyInternalMutations($items, $account_id = true){
         $mutationModel = self::MUTATION_MODEL;
         $model = new $mutationModel();
         if($account_id){
@@ -47,16 +47,54 @@ trait GazingleMutation {
         }else{
             $internalMutations = $model::where('uses_external_value', '<>', 1)->get();
         }
-        foreach($internalMutations as $mutation){
-            $item[$mutation->name] = null;
+        if(is_array($items)){
+
+        }else{
+
+        }
+        foreach($items as $item){
+            foreach($internalMutations as $mutation){
+                $item[$mutation->name] = null;
+            }
+            if($item->meta){
+                foreach($item->meta as $metaKey => $metaValue){
+                    if(is_null($item[$metaKey]))
+                        $item[$metaKey] = $metaValue;
+                }
+            }
         }
 
-        foreach($item->meta as $metaKey => $metaValue){
-            if(is_null($item[$metaKey]))
-                $item[$metaKey] = $metaValue;
-        }
 
-        return $item;
+
+        return $items;
     }
 
+    /*
+     * Setup a mutations for specific account
+     */
+    public function setupMutations(Request $request){
+        $mutationModel = self::MUTATION_MODEL;
+        $presetModel = self::PRESET_MODEL;
+        if($request->account_id){
+            $items = $presetModel::all();
+            $newItems = [];
+            foreach($items as $item){
+                $exist = $mutationModel::where('name', $item->name)->where('account_id', $request->account_id)->first();
+                if($exist){
+                    //$exist->update($item->toArray());
+                }else{
+                    $item['account_id'] = $request->account_id;
+                    try{
+                        $mutation = $mutationModel::create($item->toArray());
+                        $newItems[] = $mutation;
+                    }catch(\Exception $exception){
+                        return $this->wrongData("Something went wrong...\n ID of preset: ".$item->id);
+                    }
+                }
+            }
+            return $this->success($newItems, 'Equipment has been set-up for account '.$request->account_id.'. Added '.count($newItems).' mutation rules');
+        }else{
+            return $this->wrongData('Please provide an account_id field');
+        }
+    }
 }

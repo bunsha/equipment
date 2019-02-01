@@ -22,15 +22,13 @@ class Equipment extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'description', 'serial', 'model',
-        'type_id', 'account_id', 'status_id', 'meta'
+        'name', 'type_id', 'bar_code', 'account_id', 'status_id', 'meta'
     ];
 
     protected $casts = ['meta' => 'array'];
 
     protected $dates = [
         'created_at', 'updated_at', 'deleted_at',
-        'purchased_at', 'last_service_at', 'next_service_at', 'insurance_valid_until', 'registration_renewal_at',
     ];
 
     /**
@@ -43,8 +41,7 @@ class Equipment extends Model
     ];
 
     public $searchable = [
-        'name', 'serial', 'bar_code', 'type_id',
-        'status_id', 'account_id',  'created_at', 'updated_at'
+        'name',  'bar_code', 'type_id', 'status_id', 'account_id',  'created_at', 'updated_at'
     ];
 
 
@@ -54,9 +51,6 @@ class Equipment extends Model
             'type_id' => 'integer|exists:equipment_types,id',
             'status_id' => 'integer|exists:equipment_statuses,id',
             'name' => 'required|string|max:255',
-            'description' => 'string|max:2048',
-            'serial' => 'string|max:255',
-            'model' => 'string|max:255',
             'bar_code' => 'string|max:128',
         ];
     }
@@ -66,9 +60,6 @@ class Equipment extends Model
             'type_id' => 'integer|exists:equipment_types,id',
             'status_id' => 'integer|exists:equipment_statuses,id',
             'name' => 'string|max:255',
-            'description' => 'string|max:2048',
-            'serial' => 'string|max:255',
-            'model' => 'string|max:255',
             'bar_code' => 'string|max:128',
         ];
     }

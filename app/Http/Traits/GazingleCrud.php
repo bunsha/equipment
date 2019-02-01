@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Response;
 trait GazingleCrud {
 
     use GazingleApi;
-    use GazingleMutation;
+
 
     public $item;
     public $model;
@@ -62,7 +62,6 @@ trait GazingleCrud {
         $model = self::MODEL;
         $this->item = new $model();
         $this->item = $model::withTrashed()->findOrFail($id);
-        $this->item = $this->applyInternalMutations($this->item);
         return $this->item;
     }
 
@@ -72,8 +71,8 @@ trait GazingleCrud {
      * @return Response
      */
     public function get(Request $request, $id){
-
         $this->item = $this->_getById($id);
+        $this->item =  $this->applyInternalMutations([$this->item])[0];;
         return $this->success($this->item);
     }
 
@@ -87,6 +86,7 @@ trait GazingleCrud {
         $this->validate($request, $this->item->createRules());
         $this->item = $this->item->create($request->all());
         $this->item = $this->_getById($this->item->id);
+        $this->item = $this->applyInternalMutations([$this->item])[0];
         event(new ModelCreatedEvent($this->item));
         return $this->success($this->item);
     }
@@ -98,9 +98,18 @@ trait GazingleCrud {
     public function update(Request $request, $id){
         $this->item = $this->_getById($id);
         $this->validate($request, $this->item->updateRules());
-        $this->item->fill($request->all())->save();
+        $this->item->fill($request->all());
+        $allMeta = $this->item->meta;
+        foreach($this->item->meta as $metaKey => $metaValue){
+            if(array_key_exists($metaKey, $request->all())){
+                $allMeta[$metaKey] = $request[$metaKey];
+                $this->item->meta = $allMeta;
+            }
+        }
+        $this->item->save();
+        $this->item = $this->applyInternalMutations([$this->item])[0];
         event(new ModelUpdatedEvent($this->item));
-        return $this->success($this->item);
+        return $this->get($request, $this->item->id);
     }
 
     /**
@@ -110,6 +119,7 @@ trait GazingleCrud {
     public function delete(Request $request, $id){
         $this->item = $this->_getById($id);
         $this->item->delete();
+        $this->item = $this->applyInternalMutations([$this->item])[0];
         event(new ModelDeletedEvent($this->item));
         return $this->success($this->item);
     }
@@ -122,6 +132,7 @@ trait GazingleCrud {
     public function restore(Request $request, $id){
         $this->item = $this->_getById($id);
         $this->item->restore();
+        $this->item = $this->applyInternalMutations([$this->item])[0];
         event(new ModelRestoredEvent($this->item));
         return $this->success($this->item);
     }
@@ -134,6 +145,7 @@ trait GazingleCrud {
         $this->item = $this->_getById($id);
         try{
             $this->item->forceDelete();
+            $this->item = $this->applyInternalMutations([$this->item])[0];
             event(new ModelPurgedEvent($this->item));
         }catch(QueryException $exception){
             return $this->wrongData('Unable to purge item. Please Detach all connections first');

@@ -21,6 +21,7 @@ class EquipmentController extends Controller
 
     const MODEL = Equipment::class;
     const MUTATION_MODEL = EquipmentMutation::class;
+    const PRESET_MODEL = EquipmentPreset::class;
     public $token = false;
 
     /**
@@ -143,29 +144,5 @@ class EquipmentController extends Controller
         //return $this->deleteFrom('equipment', 1);
         //return $this->restoreFrom('equipment', 1);
         //return $this->purgeFrom('equipment', 123);
-    }
-
-    public function setupMutations(Request $request){
-        if($request->account_id){
-            $items = EquipmentPreset::all();
-            $newItems = [];
-            foreach($items as $item){
-                $exist = EquipmentMutation::where('name', $item->name)->where('account_id', $request->account_id)->first();
-                if($exist){
-                    //$exist->update($item->toArray());
-                }else{
-                    $item['account_id'] = $request->account_id;
-                    try{
-                        $mutation = EquipmentMutation::create($item->toArray());
-                        $newItems[] = $mutation;
-                    }catch(\Exception $exception){
-                        return $this->wrongData("Something went wrong...\n ID of preset: ".$item->id);
-                    }
-                }
-            }
-            return $this->success($newItems, 'Equipment has been set-up for account '.$request->account_id.'. Added '.count($newItems).' mutation rules');
-        }else{
-            return $this->wrongData('Please provide an account_id field');
-        }
     }
 }

@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Response;
 
 trait GazingleApi {
 
+    use GazingleMutation;
+
     public $time;
     public $request;
     public $request_names = [];
@@ -64,6 +66,23 @@ trait GazingleApi {
             'message' => $message,
             'time' => $this->time
         ]);
+    }
+
+    /**
+     * Send "Success" response
+     * @return Response
+     */
+    public function paginatedSuccess($data, $message = 'OK'){
+        $result = [
+            'success' => true,
+            'data' => (!is_array($data)) ? $data->toArray()['data'] : $data['data'],
+            'message' => $message,
+            'time' => $this->time
+        ];
+        foreach(array_except($data->toArray(), ['data']) as $key => $value){
+            $result[$key] = $value;
+        }
+        return response()->json($result);
     }
 
     /**
@@ -131,22 +150,33 @@ trait GazingleApi {
             }else{
                 $items = $items->take($this->maxResults);
             }
-            if($request->has('paginate'))
-                return $this->success($items->paginate($request->paginate)->appends($request->all()));
-            else{
+            if($request->has('paginate')){
+                $response = $items->paginate($request->paginate);
+                $items = $response->items();
+                $items = $this->applyInternalMutations($items);
+                return $this->paginatedSuccess($response);
+            }else{
                 $count = $items->count();
                 if($count <= $this->maxResults){
-                    return $this->success($items->get());
+                    $items = $items->get();
+                    $items = $this->applyInternalMutations($items);
+                    return $this->success($items);
                 }else{
                     if($request->has('limit')){
-                        return $this->success($items->get());
+                        $items = $items->get();
+                        $items = $this->applyInternalMutations($items);
+                        return $this->success($items);
                     }else{
-                        return $this->success($items->paginate($this->maxResults)->appends(['total' => $count]));
+                        $response = $items->paginate($this->maxResults)->appends(['total' => $count]);
+                        $items = $response->items();
+                        $items = $this->applyInternalMutations($items);
+
+                        return $this->paginatedSuccess($response);
                     }
                 }
             }
         }catch(\Exception $ex){
-            //return $this->serverError($ex->getMessage());
+            //return $ex;
             return $this->serverError('Wrong filters provided. Please check documentation');
         }
     }
