@@ -18,9 +18,9 @@ $factory->define(App\EquipmentMutation::class, function (Faker\Generator $faker)
         'display_name' => $name,
         'data_type' => 'select',
         'values' => [$faker->word, $faker->word, $faker->word, $faker->word, $faker->word],
-        'is_nullable' => $faker->numberBetween(0,1),
-        'is_replace' => $faker->numberBetween(0,1),
-        'is_hidden' => $faker->numberBetween(0,1),
+        'is_nullable' => ($faker->numberBetween(0,1)) ? 1 : null,
+        'is_replace' => ($faker->numberBetween(0,1)) ? 1 : null,
+        'is_hidden' => ($faker->numberBetween(0,1)) ? 1 : null,
         'account_id' => 1,
     ];
 });

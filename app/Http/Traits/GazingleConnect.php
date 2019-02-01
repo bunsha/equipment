@@ -14,7 +14,7 @@ trait GazingleConnect {
         'equipment' => [
             'url' => 'http://microservices.equipment',
             'crud_prefix' => '/equipment',
-            'mutations' => '',
+            'mutations' => '/mutations',
         ],
     ];
 

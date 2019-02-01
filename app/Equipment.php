@@ -39,7 +39,7 @@ class Equipment extends Model
      * @var array
      */
     protected $hidden = [
-
+        'meta'
     ];
 
     public $searchable = [
@@ -47,7 +47,6 @@ class Equipment extends Model
         'status_id', 'account_id',  'created_at', 'updated_at'
     ];
 
-    public $mutates = true;
 
     public function createRules(){
         return [

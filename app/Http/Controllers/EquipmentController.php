@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Equipment;
 use App\EquipmentHistory;
+use App\EquipmentMutation;
 use App\Http\Traits\GazingleConnect;
 use App\Http\Traits\GazingleCrud;
 use Carbon\Carbon;
@@ -18,6 +19,7 @@ class EquipmentController extends Controller
     use GazingleConnect;
 
     const MODEL = Equipment::class;
+    const MUTATION_MODEL = EquipmentMutation::class;
     public $token = false;
 
     /**
