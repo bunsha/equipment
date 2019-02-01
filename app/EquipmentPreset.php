@@ -9,11 +9,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 
-class EquipmentMutation extends Model
+class EquipmentPreset extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'equipment_mutations';
+    protected $table = 'equipment_presets';
 
     /**
      * The attributes that are mass assignable.
@@ -21,7 +21,7 @@ class EquipmentMutation extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'display_name', 'data_type', 'values', 'external', 'uses_external_value', 'dependencies', 'account_id',
+        'name', 'display_name', 'data_type', 'values', 'external', 'uses_external_value', 'dependencies',
         'deleted_at', 'is_required', 'is_hidden', 'is_function','is_replaceable', 'is_replacing'
     ];
 
@@ -34,9 +34,7 @@ class EquipmentMutation extends Model
      *
      * @var array
      */
-    protected $hidden = [
-
-    ];
+    protected $hidden = [];
 
     protected $casts = [
         'value' => 'array',
@@ -44,9 +42,7 @@ class EquipmentMutation extends Model
         'dependencies' => 'array',
     ];
 
-    public $searchable = [
-        'name'
-    ];
+    public $searchable = [];
 
     public function createRules(){
         return [
@@ -62,22 +58,9 @@ class EquipmentMutation extends Model
             'is_replacing' => 'boolean',
             'is_hidden' => 'boolean',
             'is_function' => 'boolean',
-            'account_id' => 'required|integer',
         ];
     }
     public function updateRules(){
-        return [
-            'name' => 'string|max:255',
-            'display_name' => 'string|max:255',
-            'data_type' => 'string|max:128',
-            'values' => 'json',
-            'is_nullable' => 'boolean',
-            'is_replace' => 'boolean',
-            'is_hidden' => 'boolean',
-            'account_id' => 'integer',
-        ];
-    }
-    public function getTableName(){
-        return $this->table;
+        return [];
     }
 }
