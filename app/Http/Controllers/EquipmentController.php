@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Equipment;
+use App\EquipmentConnection;
 use App\EquipmentHistory;
 use App\EquipmentMutation;
 use App\EquipmentPreset;
@@ -17,10 +18,11 @@ use Illuminate\Support\Facades\Response;
 class EquipmentController extends Controller
 {
     use GazingleCrud;
-    use GazingleConnect;
+
 
     const MODEL = Equipment::class;
     const MUTATION_MODEL = EquipmentMutation::class;
+    const CONNECTION_MODEL = EquipmentConnection::class;
     const PRESET_MODEL = EquipmentPreset::class;
     public $token = false;
 

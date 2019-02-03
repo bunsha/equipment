@@ -32,6 +32,7 @@ class CreateEquipmentMutationsTable extends Migration
             $table->timestampsTz();
 
             $table->index('name');
+            $table->index('uses_external_value');
             $table->index('account_id');
         });
     }

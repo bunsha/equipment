@@ -14,13 +14,19 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 
+/**
+ * Trait GazingleCrud
+ * @package App\Http\Traits
+ */
 trait GazingleCrud {
 
     use GazingleApi;
-
+    use GazingleConnect;
 
     public $item;
+    public $items;
     public $model;
+    public $connectionModel;
 
 
     /**
@@ -30,7 +36,7 @@ trait GazingleCrud {
      */
     protected function _search(Request $request){
         $model = self::MODEL;
-        $this->item = new $model();
+        $this->item = new $model;
         $items = $this->item->whereNotNull('id');
         $items = $this->_searchInModel($this->item, $items);
         return $items;
@@ -52,7 +58,6 @@ trait GazingleCrud {
         return $this->returnParsed($items, $request);
     }
 
-
     /**
      * Set current item as DB entity. Ignores soft-deletes
      *
@@ -73,6 +78,7 @@ trait GazingleCrud {
     public function get(Request $request, $id){
         $this->item = $this->_getById($id);
         $this->item =  $this->applyInternalMutations([$this->item])[0];;
+        $this->item =  $this->applyExternalMutations([$this->item])[0];;
         return $this->success($this->item);
     }
 
@@ -151,5 +157,47 @@ trait GazingleCrud {
             return $this->wrongData('Unable to purge item. Please Detach all connections first');
         }
         return $this->success($this->item);
+    }
+
+    /**
+     * Get specific resource connections. By default gets all except detached and without object connected
+     * @param with_detached boolean - includes detached connections (example: get lead equipment history)
+     * @param include_objects boolean - includes detached connections (example: get lead equipment history)
+     * @return Response
+     */
+    public function getConnections(Request $request, $id){
+        $connectionModel = self::CONNECTION_MODEL;
+        $this->connectionModel = new $connectionModel;
+        $connections = $this->connectionModel->where('item_id', $id);
+        if(!$request->with_detached){
+            $connections = $connections->whereNull('detached_at');
+        }
+        if($request->service){
+            $connections = $connections->where('service', $request->service);
+        }
+        $connections = $connections->get();
+
+        if($request->include_objects){
+            $includedServices = [];
+            $includedObjects = [];
+            foreach ($connections as $connectionItem){
+                if(!isset($includedServices[$connectionItem->service])){
+                    $includedServices[$connectionItem->service] = [];
+                }
+                $includedServices[$connectionItem->service][] = $connectionItem->service_id;
+            }
+            foreach($includedServices as $serviceKey => $ids){
+                try{
+                    $serviceResponse = $this->indexFrom($serviceKey, ['id' => implode(',', $ids)]);
+                    if(isset($serviceResponse['data']))
+                        $serviceResponse = $serviceResponse['data'];
+                }catch(\Exception $exception){
+                    return $this->wrongData('Something went wrong with connection to '.$serviceKey.'. Please check out your connections table');
+                }
+                $includedObjects[$serviceKey] = $serviceResponse;
+            }
+            return $this->success(['connections' => $connections, 'objects' => $includedObjects]);
+        }
+        return $this->success($connections);
     }
 }

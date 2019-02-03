@@ -9,10 +9,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 
-class EquipmentHistory extends Model
+class EquipmentConnection extends Model
 {
 
-    protected $table = 'equipment_history';
+    protected $table = 'equipment_connection';
 
     /**
      * The attributes that are mass assignable.
@@ -20,12 +20,14 @@ class EquipmentHistory extends Model
      * @var array
      */
     protected $fillable = [
-        'equipment_id', 'service_id', 'user_id','service', 'attached_at', 'detached_at', 'deleted_at'
+        'equipment_id', 'service_id', 'user_id','service', 'meta', 'attached_at', 'detached_at', 'deleted_at'
     ];
 
     protected $dates = [
         'created_at', 'updated_at', 'deleted_at', 'attached_at', 'detached_at',
     ];
+
+    protected $casts = ['meta' => 'array'];
 
     /**
      * The attributes excluded from the model's JSON form.
@@ -38,6 +40,6 @@ class EquipmentHistory extends Model
 
     public function equipment()
     {
-        return $this->hasMany(Equipment::class, 'equipment_id');
+        return $this->hasMany(Equipment::class, 'item_id');
     }
 }

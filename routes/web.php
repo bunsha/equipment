@@ -48,6 +48,8 @@ $router->group(['prefix' => 'equipment'], function ($route) {
     $route->delete('/{id}', 'EquipmentController@delete');
     $route->post('/{id}/restore', 'EquipmentController@restore');
     $route->delete('/{id}/purge', 'EquipmentController@destroy');
+    $route->get('/{id}/connections', 'EquipmentController@getConnections');
+    $route->get('/{id}/history', 'EquipmentController@getHistory');
     $route->get('/{id}/history', 'EquipmentController@getHistory');
     $route->get('/{id}/history/attached', 'EquipmentController@getAttachedHistory');
     $route->get('/{id}/history/detached', 'EquipmentController@getDetachedHistory');

@@ -47,11 +47,19 @@ trait GazingleApi {
      */
     protected function _searchInModel(Model $model, Builder $items){
         foreach($model->searchable as $param){
-            if(isset($this->request[$param]))
-                $items = $items->where($param, $this->request[$param]);
-            if(isset($this->request[$param.'_like']))
-                $items = $items->where($param, 'like', '%'.$this->request[$param.'_like'].'%');
+            if($param != 'id'){
+                if(isset($this->request[$param]))
+                    $items = $items->where($param, $this->request[$param]);
+                if(isset($this->request[$param.'_like']))
+                    $items = $items->where($param, 'like', '%'.$this->request[$param.'_like'].'%');
+            }else{
+                if($this->request['id']){
+                    $ids = explode(',', $this->request['id']);
+                    $items = $items->whereIn('id', $ids);
+                }
+            }
         }
+
         return $items;
     }
 
@@ -150,6 +158,9 @@ trait GazingleApi {
             }else{
                 $items = $items->take($this->maxResults);
             }
+            if($request->has('exclude')){
+                $items = $items->whereNotIn('id', explode(',', $request->exclude));
+            }
             if($request->has('paginate')){
                 $response = $items->paginate($request->paginate);
                 $items = $response->items();
@@ -160,16 +171,19 @@ trait GazingleApi {
                 if($count <= $this->maxResults){
                     $items = $items->get();
                     $items = $this->applyInternalMutations($items);
+                    $items = $this->applyExternalMutations($items);
                     return $this->success($items);
                 }else{
                     if($request->has('limit')){
                         $items = $items->get();
                         $items = $this->applyInternalMutations($items);
+                        $items = $this->applyExternalMutations($items);
                         return $this->success($items);
                     }else{
                         $response = $items->paginate($this->maxResults)->appends(['total' => $count]);
                         $items = $response->items();
                         $items = $this->applyInternalMutations($items);
+                        $items = $this->applyExternalMutations($items);
 
                         return $this->paginatedSuccess($response);
                     }

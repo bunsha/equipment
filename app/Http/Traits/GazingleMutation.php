@@ -35,9 +35,9 @@ trait GazingleMutation {
 
 
     /**
-     * Update model instance according to mutation mapper
+     * Update model instance with internal data,  according to mutation mapper
      *
-     * @return Model
+     * @return array
      */
     public function applyInternalMutations($items, $account_id = true){
         $mutationModel = self::MUTATION_MODEL;
@@ -45,13 +45,9 @@ trait GazingleMutation {
         if($account_id){
             $internalMutations = $model::where('account_id', $account_id)->whereNull('uses_external_value')->get();
         }else{
-            $internalMutations = $model::where('uses_external_value', '<>', 1)->get();
+            $internalMutations = $model::whereNull('uses_external_value')->get();
         }
-        if(is_array($items)){
 
-        }else{
-
-        }
         foreach($items as $item){
             foreach($internalMutations as $mutation){
                 $item[$mutation->name] = null;
@@ -63,11 +59,85 @@ trait GazingleMutation {
                 }
             }
         }
-
-
-
         return $items;
     }
+
+    /**
+     * Update model instance with external data, according to mutation mapper
+     *
+     * @return array
+     */
+    public function applyExternalMutations($items, $account_id = true){
+        $mutationModel = self::MUTATION_MODEL;
+        $model = new $mutationModel();
+        if($account_id){
+            $externalMutations = $model::where('account_id', $account_id)->whereNotNull('uses_external_value')->get();
+        }else{
+            $externalMutations = $model::whereNotNull('uses_external_value')->get();
+        }
+
+        foreach($items as $item){
+            $services = [];
+            foreach($externalMutations as $mutation){
+                $services[] = $mutation->external['service'];
+                $item[$mutation->name] = $mutation->external['service'];
+            }
+            $connections = $this->_getExternalConnections([$item->id], $services);
+            foreach($externalMutations as $mutation){
+                if(isset($connections[$item[$mutation->name]]))
+                    $item[$mutation->name] =  $connections[$item[$mutation->name]];
+                else
+                    $item[$mutation->name] = null;
+            }
+        }
+        return $items;
+    }
+
+
+    protected function _getExternalConnections($ids, $services, $exclude = []){
+        $exclude = implode(',', $ids);
+        $connectionModel = self::CONNECTION_MODEL;
+        $this->connectionModel = new $connectionModel;
+        $connections = $this->connectionModel
+            ->whereIn('item_id', $ids)
+            ->whereIn('service', $services);
+        if(isset($this->request['exclude_mutation'])){
+            $connections = $connections->whereNotIn('service', [$this->request['exclude_mutation']]);
+        }
+
+        if(!isset($this->request['with_detached'])){
+            $connections = $connections->whereNull('detached_at');
+        }
+        $connections = $connections->get();
+        //print_r($connections->toArray()) ;
+
+        $includedServices = [];
+        $includedObjects = [];
+        foreach ($connections as $connectionItem){
+            if(!isset($includedServices[$connectionItem->service])){
+                $includedServices[$connectionItem->service] = [];
+            }
+            $includedServices[$connectionItem->service][] = $connectionItem->service_id;
+        }
+        foreach($includedServices as $serviceKey => $ids){
+            try{
+                //'exclude' => implode(',', $ids)
+                $serviceResponse = $this->indexFrom($serviceKey, ['id' => implode(',', $ids), 'exclude_mutation' => $serviceKey]);
+                if(isset($serviceResponse['data']))
+                    $serviceResponse = $serviceResponse['data'];
+            }catch(\Exception $exception){
+                return $this->wrongData('Something went wrong with connection to '.$serviceKey.'. Please check out your connections table');
+            }
+            $includedObjects[$serviceKey] = $serviceResponse;
+        }
+        return $includedObjects;
+
+    }
+
+
+
+
+
 
     /*
      * Setup a mutations for specific account

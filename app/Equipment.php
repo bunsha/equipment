@@ -41,7 +41,7 @@ class Equipment extends Model
     ];
 
     public $searchable = [
-        'name',  'bar_code', 'type_id', 'status_id', 'account_id',  'created_at', 'updated_at'
+       'id', 'name',  'bar_code', 'type_id', 'status_id', 'account_id',  'created_at', 'updated_at'
     ];
 
 
@@ -79,8 +79,8 @@ class Equipment extends Model
         return $this->belongsTo(EquipmentType::class, 'type_id');
     }
 
-    public function history()
+    public function connections()
     {
-        return $this->hasMany(EquipmentHistory::class, 'equipment_id');
+        return $this->hasMany(EquipmentConnection::class, 'item_id');
     }
 }

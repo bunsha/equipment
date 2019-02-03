@@ -16,6 +16,11 @@ trait GazingleConnect {
             'crud_prefix' => '/equipment',
             'mutations' => '/mutations',
         ],
+        'vendors' => [
+            'url' => 'http://microservices.vendors',
+            'crud_prefix' => '/vendors',
+            'mutations' => '/mutations',
+        ],
     ];
 
 
@@ -220,4 +225,6 @@ trait GazingleConnect {
         }
         return $this->serverError('Server '.$serverName.' is not listed as available');
     }
+
+
 }
