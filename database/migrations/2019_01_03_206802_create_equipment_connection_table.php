@@ -16,9 +16,9 @@ class CreateEquipmentConnectionTable extends Migration
         Schema::create('equipment_connection', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('item_id');
+            $table->string('service', 255);
             $table->unsignedInteger('service_id');
             $table->unsignedInteger('user_id');
-            $table->string('service', 255);
             $table->json('meta');
             $table->timestamp('attached_at')->nullable();
             $table->timestamp('detached_at')->nullable();

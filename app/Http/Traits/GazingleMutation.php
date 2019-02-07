@@ -87,6 +87,7 @@ trait GazingleMutation {
                 if(isset($connections[$item[$mutation->name]]))
                     $item[$mutation->name] =  $connections[$item[$mutation->name]];
                 else
+                // unset($item[$mutation->name]);
                     $item[$mutation->name] = null;
             }
         }
@@ -95,42 +96,43 @@ trait GazingleMutation {
 
 
     protected function _getExternalConnections($ids, $services, $exclude = []){
-        $exclude = implode(',', $ids);
-        $connectionModel = self::CONNECTION_MODEL;
-        $this->connectionModel = new $connectionModel;
-        $connections = $this->connectionModel
-            ->whereIn('item_id', $ids)
-            ->whereIn('service', $services);
-        if(isset($this->request['exclude_mutation'])){
-            $connections = $connections->whereNotIn('service', [$this->request['exclude_mutation']]);
-        }
-
-        if(!isset($this->request['with_detached'])){
-            $connections = $connections->whereNull('detached_at');
-        }
-        $connections = $connections->get();
-        //print_r($connections->toArray()) ;
-
-        $includedServices = [];
-        $includedObjects = [];
-        foreach ($connections as $connectionItem){
-            if(!isset($includedServices[$connectionItem->service])){
-                $includedServices[$connectionItem->service] = [];
+        if(isset($this->request['with_connections'])){
+            $exclude = implode(',', $ids);
+            $connectionModel = self::CONNECTION_MODEL;
+            $this->connectionModel = new $connectionModel;
+            $connections = $this->connectionModel
+                ->whereIn('item_id', $ids)
+                ->whereIn('service', $services);
+            if(isset($this->request['exclude_mutation'])){
+                $connections = $connections->whereNotIn('service', [$this->request['exclude_mutation']]);
             }
-            $includedServices[$connectionItem->service][] = $connectionItem->service_id;
-        }
-        foreach($includedServices as $serviceKey => $ids){
-            try{
-                //'exclude' => implode(',', $ids)
-                $serviceResponse = $this->indexFrom($serviceKey, ['id' => implode(',', $ids), 'exclude_mutation' => $serviceKey]);
-                if(isset($serviceResponse['data']))
-                    $serviceResponse = $serviceResponse['data'];
-            }catch(\Exception $exception){
-                return $this->wrongData('Something went wrong with connection to '.$serviceKey.'. Please check out your connections table');
+
+            if(!isset($this->request['with_detached'])){
+                $connections = $connections->whereNull('detached_at');
             }
-            $includedObjects[$serviceKey] = $serviceResponse;
+            $connections = $connections->get();
+
+            $includedServices = [];
+            $includedObjects = [];
+            foreach ($connections as $connectionItem){
+                if(!isset($includedServices[$connectionItem->service])){
+                    $includedServices[$connectionItem->service] = [];
+                }
+                $includedServices[$connectionItem->service][] = $connectionItem->service_id;
+            }
+            foreach($includedServices as $serviceKey => $ids){
+                try{
+                    $serviceResponse = $this->indexFrom($serviceKey, ['id' => implode(',', $ids), 'exclude_mutation' => $serviceKey]);
+                    if(isset($serviceResponse['data']))
+                        $serviceResponse = $serviceResponse['data'];
+                }catch(\Exception $exception){
+                    return $this->wrongData('Something went wrong with connection to '.$serviceKey.'. Please check out your connections table');
+                }
+                $includedObjects[$serviceKey] = $serviceResponse;
+            }
+            return $includedObjects;
         }
-        return $includedObjects;
+        return null;
 
     }
 

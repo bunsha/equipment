@@ -77,8 +77,9 @@ trait GazingleCrud {
      */
     public function get(Request $request, $id){
         $this->item = $this->_getById($id);
-        $this->item =  $this->applyInternalMutations([$this->item])[0];;
-        $this->item =  $this->applyExternalMutations([$this->item])[0];;
+        $this->item =  $this->applyInternalMutations([$this->item])[0];
+        $this->item =  $this->applyExternalMutations([$this->item])[0];
+        $this->item = $this->parseSingle($this->item, $request);
         return $this->success($this->item);
     }
 
@@ -93,7 +94,9 @@ trait GazingleCrud {
         $this->item = $this->item->create($request->all());
         $this->item = $this->_getById($this->item->id);
         $this->item = $this->applyInternalMutations([$this->item])[0];
+        $this->item =  $this->applyExternalMutations([$this->item])[0];
         event(new ModelCreatedEvent($this->item));
+        $this->item = $this->parseSingle($this->item, $request);
         return $this->success($this->item);
     }
 
@@ -114,7 +117,9 @@ trait GazingleCrud {
         }
         $this->item->save();
         $this->item = $this->applyInternalMutations([$this->item])[0];
+        $this->item =  $this->applyExternalMutations([$this->item])[0];
         event(new ModelUpdatedEvent($this->item));
+        $this->item = $this->parseSingle($this->item, $request);
         return $this->get($request, $this->item->id);
     }
 
@@ -126,7 +131,9 @@ trait GazingleCrud {
         $this->item = $this->_getById($id);
         $this->item->delete();
         $this->item = $this->applyInternalMutations([$this->item])[0];
+        $this->item =  $this->applyExternalMutations([$this->item])[0];
         event(new ModelDeletedEvent($this->item));
+        $this->item = $this->parseSingle($this->item, $request);
         return $this->success($this->item);
     }
 
@@ -139,7 +146,9 @@ trait GazingleCrud {
         $this->item = $this->_getById($id);
         $this->item->restore();
         $this->item = $this->applyInternalMutations([$this->item])[0];
+        $this->item =  $this->applyExternalMutations([$this->item])[0];
         event(new ModelRestoredEvent($this->item));
+        $this->item = $this->parseSingle($this->item, $request);
         return $this->success($this->item);
     }
 
@@ -152,7 +161,9 @@ trait GazingleCrud {
         try{
             $this->item->forceDelete();
             $this->item = $this->applyInternalMutations([$this->item])[0];
+            $this->item =  $this->applyExternalMutations([$this->item])[0];
             event(new ModelPurgedEvent($this->item));
+            $this->item = $this->parseSingle($this->item, $request);
         }catch(QueryException $exception){
             return $this->wrongData('Unable to purge item. Please Detach all connections first');
         }

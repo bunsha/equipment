@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Response;
 
 trait GazingleApi {
@@ -53,7 +54,7 @@ trait GazingleApi {
                 if(isset($this->request[$param.'_like']))
                     $items = $items->where($param, 'like', '%'.$this->request[$param.'_like'].'%');
             }else{
-                if($this->request['id']){
+                if(isset($this->request['id'])){
                     $ids = explode(',', $this->request['id']);
                     $items = $items->whereIn('id', $ids);
                 }
@@ -139,10 +140,10 @@ trait GazingleApi {
      */
     public function returnParsed($items, $request){
         try{
-            if($request->has('columns')){
-                $columns = explode(",",str_replace(' ', '', $request->get('columns')));
-                $items = $items->select($columns);
-            }
+//            if($request->has('columns')){
+//                $columns = explode(",",str_replace(' ', '', $request->get('columns')));
+//                $items = $items->select($columns);
+//            }
             if($request->has('with_trashed')){
                 $items = $items->withTrashed();
             }
@@ -165,6 +166,8 @@ trait GazingleApi {
                 $response = $items->paginate($request->paginate);
                 $items = $response->items();
                 $items = $this->applyInternalMutations($items);
+                $items = $this->applyExternalMutations($items);
+                $items = $this->parseMany($items, $request);
                 return $this->paginatedSuccess($response);
             }else{
                 $count = $items->count();
@@ -172,18 +175,21 @@ trait GazingleApi {
                     $items = $items->get();
                     $items = $this->applyInternalMutations($items);
                     $items = $this->applyExternalMutations($items);
+                    $items = $this->parseMany($items, $request);
                     return $this->success($items);
                 }else{
                     if($request->has('limit')){
                         $items = $items->get();
                         $items = $this->applyInternalMutations($items);
                         $items = $this->applyExternalMutations($items);
+                        $items = $this->parseMany($items, $request);
                         return $this->success($items);
                     }else{
                         $response = $items->paginate($this->maxResults)->appends(['total' => $count]);
                         $items = $response->items();
                         $items = $this->applyInternalMutations($items);
                         $items = $this->applyExternalMutations($items);
+                        $items = $this->parseMany($items, $request);
 
                         return $this->paginatedSuccess($response);
                     }
@@ -193,5 +199,39 @@ trait GazingleApi {
             //return $ex;
             return $this->serverError('Wrong filters provided. Please check documentation');
         }
+    }
+
+    public function parseSingle($item, $request){
+        $currentAttributes = $item->getAttributes();
+        try{
+            if($request->has('columns')){
+                $columns = explode(",",str_replace(' ', '', $request->get('columns')));
+                foreach($currentAttributes as $currentAttributeKey => $currentAttributeValue){
+                    $shouldRemove = true;
+                    foreach($columns as $column){
+                        if($currentAttributeKey == $column){
+                            $shouldRemove = false;
+                        }
+                    }
+                    if($shouldRemove){
+                        unset($item[$currentAttributeKey]);
+                    }
+                }
+            }
+            return $item;
+        }catch(\Exception $ex){
+            return $this->serverError('Wrong filters provided. Please check documentation');
+        }
+    }
+
+    public function parseMany($items, $request){
+        $return = [];
+        if(is_array($items)){
+            foreach($items as $item){
+                $this->parseSingle($item, $request);
+            }
+        }
+        return $items;
+
     }
 }
