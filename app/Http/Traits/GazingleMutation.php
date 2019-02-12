@@ -16,6 +16,11 @@ use Illuminate\Support\Facades\Response;
 
 trait GazingleMutation {
 
+    protected $conditions = [
+        'eq', 'gt', 'lt', 'gte', 'lte'
+    ];
+
+
 
     /**
      * Display a listing of the resource.
@@ -58,6 +63,7 @@ trait GazingleMutation {
                         $item[$metaKey] = $metaValue;
                 }
             }
+            $item = $this->parseDependencies($item);
         }
         return $items;
     }
@@ -90,11 +96,16 @@ trait GazingleMutation {
                 // unset($item[$mutation->name]);
                     $item[$mutation->name] = null;
             }
+            $item = $this->parseDependencies($item);
         }
         return $items;
     }
 
-
+    /**
+     * Retrieve external data, according to mutation mapper
+     *
+     * @return array
+     */
     protected function _getExternalConnections($ids, $services, $exclude = []){
         if(isset($this->request['with_connections'])){
             $exclude = implode(',', $ids);
@@ -136,10 +147,66 @@ trait GazingleMutation {
 
     }
 
+    protected function parseDependencies($item, $account_id = true){
+        $mutationModel = self::MUTATION_MODEL;
+        $model = new $mutationModel();
+        if($account_id){
+            $mutations = $model::where('account_id', $account_id)->whereNotNull('is_function')->get();
+        }else{
+            $mutations = $model::whereNotNull('is_function')->get();
+        }
+
+        foreach($mutations as $mutation) {
+            if (is_array($mutation->dependencies) && !empty($mutation->dependencies)) {
+                foreach ($mutation->dependencies as $dependency) {
+                    $met = false;
+                    //dd($dependency);
+                    switch ($dependency['condition']) {
+                        case 'eq': {
+                            if ($dependency['value'] == $item[$mutation->name]) {
+                                $met = 'eq';
+                            }
+                            break;
+                        }
+                        case 'gt': {
+                            if ($dependency['value'] > $item[$mutation->name]) {
+                                $met = 'gt';
+                            }
+                            break;
+                        }
+                        case 'lt': {
+                            if ($dependency['value'] < $item[$mutation->name]) {
+                                $met = 'lt';
+                            }
+                            break;
+                        }
+                        case 'gte': {
+                            if ($dependency['value'] >= $item[$mutation->name]) {
+                                $met = 'gte';
+                            }
+                            break;
+                        }
+                        case 'lte': {
+                            if ($dependency['value'] <= $item[$mutation->name]) {
+                                $met = 'lte';
+                            }
+                            break;
+                        }
+                    }
+                    if($met){
+                        $item['dependencies'] = [$dependency['condition'], $met];
+                    }else{
+                        $item['dependencies'] = [$dependency['condition'], $met];
+                    }
+                }
+            }
+        }
+
+        return $item;
 
 
 
-
+    }
 
     /*
      * Setup a mutations for specific account

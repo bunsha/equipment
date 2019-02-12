@@ -2,11 +2,13 @@
 
 namespace App\Http\Traits;
 
+use App\Connection;
 use App\Events\GazingleCrud\ModelCreatedEvent;
 use App\Events\GazingleCrud\ModelDeletedEvent;
 use App\Events\GazingleCrud\ModelPurgedEvent;
 use App\Events\GazingleCrud\ModelRestoredEvent;
 use App\Events\GazingleCrud\ModelUpdatedEvent;
+use Carbon\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
@@ -27,6 +29,7 @@ trait GazingleCrud {
     public $items;
     public $model;
     public $connectionModel;
+    public $user;
 
 
     /**
@@ -210,5 +213,97 @@ trait GazingleCrud {
             return $this->success(['connections' => $connections, 'objects' => $includedObjects]);
         }
         return $this->success($connections);
+    }
+
+
+    /**
+     * Get specific connection item from DB entity.
+     *
+     * @return Connection
+     */
+    protected function _getConnectionItem($service, $service_id){
+        $item = Connection::where('item_id', $this->item->id)
+            ->where('service_id', $service_id)
+            ->where('service', $service)
+            ->orderBy('created_at', 'desc')
+            ->first();
+        return $item;
+    }
+
+
+    /**
+     * Attach specific resource to a service.
+     * @return Response
+     */
+    public function attach(Request $request, $id){
+        /*
+         * Temporary crap, until we get a jwt ready
+         * ToDo: replace temporary bullshit with actual getUser().
+         */
+        $this->user = new \stdClass();
+        $this->user->id = 1;
+
+
+        $this->item = $this->_getById($id);
+        $request->merge(['item_id' => $id])
+            ->merge(['user_id' => $this->user->id]);
+        $this->validate($request, [
+            'item_id' => 'required|integer',
+            'service_id' => 'required|integer',
+            'user_id' => 'required|integer',
+            'service' => 'required|string',
+            'attached_at' => 'date',
+        ]);
+        if(!$request->has('attached_at')){
+            $request->merge(['attached_at' => Carbon::now()]);
+        }
+        try{
+            $historyItem = $this->_getConnectionItem($request->service, $request->service_id);
+            if(!$historyItem || $historyItem->detached_at){
+                $result = $this->item->connections()->create($request->except('detached_at'));
+                return $this->success($result);
+            }
+            return $this->wrongData('Item is already attached');
+        }catch(\Exception $e){
+            return $this->serverError('Something went wrong. Please check a documentation');
+        }
+    }
+
+    /**
+     * Detach specific resource to a service.
+     * @return Response
+     */
+    public function detach(Request $request, $id){
+        /*
+ * Temporary crap, until we get a jwt ready
+ * ToDo: replace temporary bullshit with actual getUser().
+ */
+        $this->user = new \stdClass();
+        $this->user->id = 1;
+
+        $request->merge(['item_id' => $id])
+            ->merge(['user_id' => $this->user->id]);
+        $this->item = $this->_getById($id);
+        $this->validate($request, [
+            'item_id' => 'required|integer',
+            'service_id' => 'required|integer',
+            'user_id' => 'required|integer',
+            'service' => 'required|string',
+            'detached_at' => 'date',
+        ]);
+        try{
+            $result = $this->_getConnectionItem($request->service, $request->service_id);
+            if($result){
+                if($result->detached_at)
+                    return $this->wrongData('Item is already detached');
+            }else{
+                return $this->wrongData('Item is not attached');
+            }
+            $result->fill(['detached_at' => ($request->has('detached_at'))? $request->detached_at : Carbon::now()])->save();
+
+            return $this->success($result);
+        }catch(QueryException $e){
+            return $this->serverError('Something went wrong. Please check a documentation');
+        }
     }
 }

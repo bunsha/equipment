@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 
-class EquipmentConnection extends Model
+class Connection extends Model
 {
 
     protected $table = 'equipment_connection';
@@ -20,7 +20,7 @@ class EquipmentConnection extends Model
      * @var array
      */
     protected $fillable = [
-        'equipment_id', 'service_id', 'user_id','service', 'meta', 'attached_at', 'detached_at', 'deleted_at'
+        'item_id', 'service_id', 'user_id','service', 'meta', 'attached_at', 'detached_at', 'deleted_at'
     ];
 
     protected $dates = [
@@ -38,8 +38,4 @@ class EquipmentConnection extends Model
 
     ];
 
-    public function equipment()
-    {
-        return $this->hasMany(Equipment::class, 'item_id');
-    }
 }

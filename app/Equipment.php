@@ -81,6 +81,6 @@ class Equipment extends Model
 
     public function connections()
     {
-        return $this->hasMany(EquipmentConnection::class, 'item_id');
+        return $this->hasMany(Connection::class, 'item_id');
     }
 }
