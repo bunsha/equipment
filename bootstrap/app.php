@@ -38,10 +38,6 @@ $app->withEloquent();
 | your own bindings here if you like or you can make another file.
 |
 */
-
-/* Sentry */
-//$app->register(Sentry\SentryLaravel\SentryLumenServiceProvider::class);
-
 /* Redis */
 $app->register(Illuminate\Redis\RedisServiceProvider::class);
 

@@ -22,7 +22,8 @@ class Equipment extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'type_id', 'bar_code', 'account_id', 'status_id', 'meta'
+        'name', 'type_id', 'bar_code', 'account_id', 'status_id', 'meta',
+        'created_at', 'updated_at', 'deleted_at',
     ];
 
     protected $casts = ['meta' => 'array'];
