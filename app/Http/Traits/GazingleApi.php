@@ -167,6 +167,7 @@ trait GazingleApi {
                 $items = $response->items();
                 $items = $this->applyInternalMutations($items);
                 $items = $this->applyExternalMutations($items);
+                $items = $this->applyDependencies($items);
                 $items = $this->parseMany($items, $request);
                 return $this->paginatedSuccess($response);
             }else{
@@ -175,6 +176,7 @@ trait GazingleApi {
                     $items = $items->get();
                     $items = $this->applyInternalMutations($items);
                     $items = $this->applyExternalMutations($items);
+                    $items = $this->applyDependencies($items);
                     $items = $this->parseMany($items, $request);
                     return $this->success($items);
                 }else{
@@ -182,6 +184,7 @@ trait GazingleApi {
                         $items = $items->get();
                         $items = $this->applyInternalMutations($items);
                         $items = $this->applyExternalMutations($items);
+                        $items = $this->applyDependencies($items);
                         $items = $this->parseMany($items, $request);
                         return $this->success($items);
                     }else{
@@ -189,6 +192,7 @@ trait GazingleApi {
                         $items = $response->items();
                         $items = $this->applyInternalMutations($items);
                         $items = $this->applyExternalMutations($items);
+                        $items = $this->applyDependencies($items);
                         $items = $this->parseMany($items, $request);
 
                         return $this->paginatedSuccess($response);

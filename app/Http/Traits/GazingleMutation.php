@@ -20,6 +20,10 @@ trait GazingleMutation {
         'eq', 'gt', 'lt', 'gte', 'lte'
     ];
 
+    protected $methods = [
+        'get', 'set',' show', 'hide', 'delete', 'setNull', 'rename'
+    ];
+
 
 
     /**
@@ -63,7 +67,6 @@ trait GazingleMutation {
                         $item[$metaKey] = $metaValue;
                 }
             }
-            $item = $this->parseDependencies($item);
         }
         return $items;
     }
@@ -96,7 +99,25 @@ trait GazingleMutation {
                 // unset($item[$mutation->name]);
                     $item[$mutation->name] = null;
             }
-            $item = $this->parseDependencies($item);
+        }
+        return $items;
+    }
+
+    /**
+     * Update model instance, according to dependencies mapper
+     *
+     * @return array
+     */
+    public function applyDependencies($items, $account_id = true){
+        $mutationModel = self::MUTATION_MODEL;
+        $model = new $mutationModel();
+        if($account_id){
+            $mutations = $model::where('account_id', $account_id)->whereNotNull('is_function')->get();
+        }else{
+            $mutations = $model::whereNotNull('is_function')->get();
+        }
+        foreach($items as $item){
+            $item = $this->parseDependencies($item, $mutations);
         }
         return $items;
     }
@@ -147,15 +168,7 @@ trait GazingleMutation {
 
     }
 
-    protected function parseDependencies($item, $account_id = true){
-        $mutationModel = self::MUTATION_MODEL;
-        $model = new $mutationModel();
-        if($account_id){
-            $mutations = $model::where('account_id', $account_id)->whereNotNull('is_function')->get();
-        }else{
-            $mutations = $model::whereNotNull('is_function')->get();
-        }
-
+    protected function parseDependencies($item, $mutations){
         foreach($mutations as $mutation) {
             if (is_array($mutation->dependencies) && !empty($mutation->dependencies)) {
                 foreach ($mutation->dependencies as $dependency) {
@@ -163,40 +176,71 @@ trait GazingleMutation {
                     //dd($dependency);
                     switch ($dependency['condition']) {
                         case 'eq': {
-                            if ($dependency['value'] == $item[$mutation->name]) {
-                                $met = 'eq';
+                            if($dependency['type'] == 'internal'){
+                                if ($dependency['value'] == $item[$mutation->name]) {
+                                    $met = true;
+                                }
+                            }
+                            break;
+                        }
+                        case 'ne': {
+                            if($dependency['type'] == 'internal') {
+                                if ($dependency['value'] != $item[$mutation->name]) {
+                                    $met = 'neq';
+                                }
                             }
                             break;
                         }
                         case 'gt': {
-                            if ($dependency['value'] > $item[$mutation->name]) {
-                                $met = 'gt';
+                            if($dependency['type'] == 'internal') {
+                                if ($dependency['value'] > $item[$mutation->name]) {
+                                    $met = 'gt';
+                                }
                             }
                             break;
                         }
                         case 'lt': {
-                            if ($dependency['value'] < $item[$mutation->name]) {
-                                $met = 'lt';
+                            if($dependency['type'] == 'internal') {
+                                if ($dependency['value'] < $item[$mutation->name]) {
+                                    $met = 'lt';
+                                }
                             }
                             break;
                         }
                         case 'gte': {
-                            if ($dependency['value'] >= $item[$mutation->name]) {
-                                $met = 'gte';
+                            if($dependency['type'] == 'internal') {
+                                if ($dependency['value'] >= $item[$mutation->name]) {
+                                    $met = 'gte';
+                                }
                             }
                             break;
                         }
                         case 'lte': {
-                            if ($dependency['value'] <= $item[$mutation->name]) {
-                                $met = 'lte';
+                            if($dependency['type'] == 'internal') {
+                                if ($dependency['value'] <= $item[$mutation->name]) {
+                                    $met = 'lte';
+                                }
                             }
                             break;
                         }
                     }
                     if($met){
-                        $item['dependencies'] = [$dependency['condition'], $met];
-                    }else{
-                        $item['dependencies'] = [$dependency['condition'], $met];
+                        foreach($dependency['actions'] as $action){
+                            switch($action['method']){
+                                case 'hide': {
+                                    unset($item[$action['key']]);
+                                    break;
+                                }
+                                case 'rename': {
+                                    $oldKey = $item[$action['key']];
+                                    //dd($item['related_equipment']);
+                                    unset($item[$action['key']]);
+                                    $item[$action['params']] = $oldKey;
+                                    break;
+                                }
+                            }
+
+                        }
                     }
                 }
             }

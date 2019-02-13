@@ -31,6 +31,11 @@ class Equipment extends Model
         'created_at', 'updated_at', 'deleted_at',
     ];
 
+//    protected $with = [
+//        'status',
+//        'type'
+//    ];
+
     /**
      * The attributes excluded from the model's JSON form.
      *
