@@ -239,20 +239,16 @@ trait GazingleCrud {
 
     /**
      * Attach specific resource to a service.
+     * ToDo: replace temporary bullshit with actual getUser().
      * @return Response
      */
     public function attach(Request $request, $id){
         /*
          * Temporary crap, until we get a jwt ready
-         * ToDo: replace temporary bullshit with actual getUser().
          */
-        $this->user = new \stdClass();
-        $this->user->id = 1;
-
-
         $this->item = $this->_getById($id);
         $request->merge(['item_id' => $id])
-            ->merge(['user_id' => $this->user->id]);
+            ->merge(['user_id' => 1]);
         $this->validate($request, [
             'item_id' => 'required|integer',
             'service_id' => 'required|integer',
@@ -278,17 +274,14 @@ trait GazingleCrud {
     /**
      * Detach specific resource to a service.
      * @return Response
+     * ToDo: replace temporary bullshit with actual getUser().
      */
     public function detach(Request $request, $id){
         /*
- * Temporary crap, until we get a jwt ready
- * ToDo: replace temporary bullshit with actual getUser().
- */
-        $this->user = new \stdClass();
-        $this->user->id = 1;
-
+         * Temporary crap, until we get a jwt ready
+         */
         $request->merge(['item_id' => $id])
-            ->merge(['user_id' => $this->user->id]);
+            ->merge(['user_id' => 1]);
         $this->item = $this->_getById($id);
         $this->validate($request, [
             'item_id' => 'required|integer',

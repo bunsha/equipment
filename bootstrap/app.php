@@ -40,13 +40,11 @@ $app->withEloquent();
 */
 
 /* Sentry */
-$app->register(Sentry\SentryLaravel\SentryLumenServiceProvider::class);
+//$app->register(Sentry\SentryLaravel\SentryLumenServiceProvider::class);
 
 /* Redis */
 $app->register(Illuminate\Redis\RedisServiceProvider::class);
 
-/* Swagger */
-$app->configure('swagger-lume');
 
 $app->singleton(
     Illuminate\Contracts\Debug\ExceptionHandler::class,
@@ -92,8 +90,6 @@ $app->singleton(
 // $app->register(App\Providers\AuthServiceProvider::class);
 $app->register(App\Providers\EventServiceProvider::class);
 
-/* Swagger */
-$app->register(\SwaggerLume\ServiceProvider::class);
 /*
 |--------------------------------------------------------------------------
 | Load The Application Routes

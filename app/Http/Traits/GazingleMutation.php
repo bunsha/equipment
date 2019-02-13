@@ -168,6 +168,12 @@ trait GazingleMutation {
 
     }
 
+    /**
+     * Return parsed item, according to dependencies mapper
+     * @param $item
+     * @param $mutations
+     * @return mixed
+     */
     protected function parseDependencies($item, $mutations){
         foreach($mutations as $mutation) {
             if (is_array($mutation->dependencies) && !empty($mutation->dependencies)) {
@@ -233,23 +239,21 @@ trait GazingleMutation {
                                 }
                                 case 'rename': {
                                     $oldKey = $item[$action['key']];
-                                    //dd($item['related_equipment']);
                                     unset($item[$action['key']]);
                                     $item[$action['params']] = $oldKey;
                                     break;
                                 }
+                                case 'set': {
+                                    $item[$action['key']] = $item[$action['params']];
+                                    break;
+                                }
                             }
-
                         }
                     }
                 }
             }
         }
-
         return $item;
-
-
-
     }
 
     /*
