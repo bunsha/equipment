@@ -28,7 +28,7 @@ class EquipmentTableSeeder extends Seeder
 
         factory(App\EquipmentType::class, 100)->create()->each(function ($type) {
             $type->equipment()->saveMany(factory(App\Equipment::class, rand(1,30))->create()->each(function($equipment){
-                $equipment->history()->saveMany(factory(App\EquipmentHistory::class, rand(1,50))->make());
+
             }));
         });
     }

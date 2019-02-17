@@ -12,13 +12,18 @@ trait GazingleConnect {
 
     protected $servers = [
         'equipment' => [
-            'url' => 'http://microservices.equipment',
+            'url' => 'https://equipment.gazingle.com',
             'crud_prefix' => '/equipment',
             'mutations' => '/mutations',
         ],
         'vendors' => [
-            'url' => 'http://microservices.vendors',
+            'url' => 'https://vendors.gazingle.com',
             'crud_prefix' => '/vendors',
+            'mutations' => '/mutations',
+        ],
+        'activities' => [
+            'url' => 'http://microservices.activities',
+            'crud_prefix' => '/activities',
             'mutations' => '/mutations',
         ],
     ];

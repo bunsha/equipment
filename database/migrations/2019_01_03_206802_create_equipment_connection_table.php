@@ -19,7 +19,7 @@ class CreateEquipmentConnectionTable extends Migration
             $table->string('service', 255);
             $table->unsignedInteger('service_id');
             $table->unsignedInteger('user_id');
-            $table->json('meta');
+            $table->json('meta')->nullable();
             $table->timestamp('attached_at')->nullable();
             $table->timestamp('detached_at')->nullable();
             $table->timestampsTz();

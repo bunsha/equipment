@@ -221,7 +221,6 @@ trait GazingleCrud {
         return $this->success($connections);
     }
 
-
     /**
      * Get specific connection item from DB entity.
      *
@@ -235,7 +234,6 @@ trait GazingleCrud {
             ->first();
         return $item;
     }
-
 
     /**
      * Attach specific resource to a service.
