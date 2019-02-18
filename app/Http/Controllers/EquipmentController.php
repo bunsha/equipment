@@ -34,35 +34,6 @@ class EquipmentController extends Controller
         parent::__construct($request);
     }
 
-
-    /**
-     * Get specific resource history.
-     * @return Response
-     */
-    public function getHistory($id){
-        $this->item = $this->_getById($id);
-        return $this->success($this->item->history);
-    }
-
-    /**
-     * Get specific resource history, which is not detached
-     * @return Response
-     */
-    public function getAttachedHistory($id){
-        $this->item = $this->_getById($id);
-        return $this->success($this->item->history()->whereNull('detached_at')->get());
-    }
-
-    /**
-     * Get specific resource history, which is detached
-     * @return Response
-     */
-    public function getDetachedHistory($id){
-        $this->item = $this->_getById($id);
-        return $this->success($this->item->history()->whereNotNull('detached_at')->get());
-    }
-
-
     /*
      * Temporary function to play with new features
      */
