@@ -100,7 +100,7 @@ trait GazingleCrud {
         $this->item = $this->applyInternalMutations([$this->item])[0];
         $this->item =  $this->applyExternalMutations([$this->item])[0];
         $this->item =  $this->applyDependencies([$this->item])[0];
-        event(new ModelCreatedEvent($this->item));
+        event(new ModelCreatedEvent($this->item, 1));
         $this->item = $this->parseSingle($this->item, $request);
         return $this->success($this->item);
     }
@@ -124,7 +124,7 @@ trait GazingleCrud {
         $this->item = $this->applyInternalMutations([$this->item])[0];
         $this->item =  $this->applyExternalMutations([$this->item])[0];
         $this->item =  $this->applyDependencies([$this->item])[0];
-        event(new ModelUpdatedEvent($this->item));
+        event(new ModelUpdatedEvent($this->item, 1));
         $this->item = $this->parseSingle($this->item, $request);
         return $this->get($request, $this->item->id);
     }
@@ -139,7 +139,7 @@ trait GazingleCrud {
         $this->item = $this->applyInternalMutations([$this->item])[0];
         $this->item =  $this->applyExternalMutations([$this->item])[0];
         $this->item =  $this->applyDependencies([$this->item])[0];
-        event(new ModelDeletedEvent($this->item));
+        event(new ModelDeletedEvent($this->item, 1));
         $this->item = $this->parseSingle($this->item, $request);
         return $this->success($this->item);
     }
@@ -155,7 +155,7 @@ trait GazingleCrud {
         $this->item = $this->applyInternalMutations([$this->item])[0];
         $this->item =  $this->applyExternalMutations([$this->item])[0];
         $this->item =  $this->applyDependencies([$this->item])[0];
-        event(new ModelRestoredEvent($this->item));
+        event(new ModelRestoredEvent($this->item, 1));
         $this->item = $this->parseSingle($this->item, $request);
         return $this->success($this->item);
     }
@@ -171,7 +171,7 @@ trait GazingleCrud {
             $this->item = $this->applyInternalMutations([$this->item])[0];
             $this->item =  $this->applyExternalMutations([$this->item])[0];
             $this->item =  $this->applyDependencies([$this->item])[0];
-            event(new ModelPurgedEvent($this->item));
+            event(new ModelPurgedEvent($this->item, 1));
             $this->item = $this->parseSingle($this->item, $request);
         }catch(QueryException $exception){
             return $this->wrongData('Unable to purge item. Please Detach all connections first');

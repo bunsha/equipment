@@ -7,8 +7,11 @@ use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\JsonResponse;
 use \GuzzleHttp\Client;
+use Illuminate\Support\Facades\Log;
 
 trait GazingleConnect {
+
+    public $currentMicroservice = 'equipment';
 
     protected $servers = [
         'equipment' => [
@@ -22,7 +25,7 @@ trait GazingleConnect {
             'mutations' => '/mutations',
         ],
         'activities' => [
-            'url' => 'http://microservices.activities',
+            'url' => 'http://159.89.146.220',
             'crud_prefix' => '/activities',
             'mutations' => '/mutations',
         ],
@@ -45,7 +48,7 @@ trait GazingleConnect {
     protected function _parseGuzzleException($exception, $server){
         if($exception instanceof RequestException){
             if($exception->getResponse())
-                return $exception->getResponse();
+                return [$exception->getRequest(), $exception->getResponse()];
         }
         if($exception instanceof ConnectException){
             return $this->serverError('Cannot connect to url'.$server['url']);
@@ -121,6 +124,7 @@ trait GazingleConnect {
                     'query' => (!empty($params)) ? $params : [],
                 ]);
             }catch(\Exception $exception){
+                //Log::alert($exception->getMessage());
                 return $this->_parseGuzzleException($exception, $server);
             }
 
@@ -231,5 +235,30 @@ trait GazingleConnect {
         return $this->serverError('Server '.$serverName.' is not listed as available');
     }
 
+    /**
+     * Call GazingleCrud attach method on other service.
+     *
+     * @param string $serverName
+     * @return mixed
+     */
+    public function attachTo($serverName, $id, $params = []){
+        if($server = $this->_serverExist($serverName)){
+            $client = new Client();
+            try{
+                $response = $client->post($server['url'].$server['crud_prefix'].'/'.$id.'/attach', [
+                    'headers' => [
+                        'Authorization' => ($this->token) ? 'Bearer '.$this->token : '',
+                    ],
+                    'query' => (!empty($params)) ? $params : [],
+                ]);
+            }catch(\Exception $exception){
+                //Log::alert($exception->getMessage());
+                return $this->_parseGuzzleException($exception, $server);
+            }
 
+            $responseJson = json_decode($response->getBody(), true);
+            return $responseJson;
+        }
+        return $this->serverError('Server '.$serverName.' is not listed as available');
+    }
 }

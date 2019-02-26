@@ -89,4 +89,10 @@ class Equipment extends Model
     {
         return $this->hasMany(Connection::class, 'item_id');
     }
+
+
+    //public $eventModel = EquipmentEvent::class;
+    public function eventModel(){
+        return EquipmentEvent::class;
+    }
 }

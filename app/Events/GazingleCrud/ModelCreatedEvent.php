@@ -8,6 +8,7 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class ModelCreatedEvent extends Event  implements ShouldQueue
 {
@@ -33,6 +34,7 @@ class ModelCreatedEvent extends Event  implements ShouldQueue
             $this->user = $item->user_id;
         $this->channel = $item->getTable();
         // rest logic in here
+        Log::alert('created event fired');
     }
 
     /*
