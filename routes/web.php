@@ -17,6 +17,7 @@ $router->get('/', function () use ($router) {
         "version" => "0.1"
     ];
 });
+
 $router->post('/setup', 'EquipmentController@setupMutations');
 
 $router->group(['prefix' => 'equipment/statuses'], function ($route) {
