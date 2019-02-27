@@ -16,18 +16,10 @@ class CreateEquipmentTable extends Migration
         Schema::create('equipment', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name', 255)->nullable();
-            $table->string('description', 2048)->nullable();
-            $table->string('serial', 255)->nullable();
-            $table->string('model', 255)->nullable();
             $table->string('bar_code', 128)->nullable();
             $table->integer('type_id')->unsigned()->nullable();
             $table->integer('account_id')->unsigned();
             $table->integer('status_id')->unsigned()->nullable();
-            $table->timestampTz('purchased_at')->nullable();
-            $table->timestampTz('last_service_at')->nullable();
-            $table->timestampTz('next_service_at')->nullable();
-            $table->timestampTz('insurance_valid_until')->nullable();
-            $table->timestampTz('registration_renewal_at')->nullable();
             $table->json('meta')->nullable();
             $table->timestampTz('deleted_at')->nullable();
             $table->timestampsTz();

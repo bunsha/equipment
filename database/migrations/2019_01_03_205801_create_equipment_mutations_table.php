@@ -19,8 +19,8 @@ class CreateEquipmentMutationsTable extends Migration
             $table->string('display_name', 256);
             $table->string('data_type', 128);
             $table->json('value')->nullable();
-            $table->tinyInteger('uses_external_value')->nullable();
             $table->json('external')->nullable();
+            $table->tinyInteger('uses_external_value')->nullable();
             $table->tinyInteger('is_replaceable')->nullable();
             $table->tinyInteger('is_replacing')->nullable();
             $table->tinyInteger('is_hidden')->nullable();

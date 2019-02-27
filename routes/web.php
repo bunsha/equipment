@@ -19,7 +19,6 @@ $router->get('/', function () use ($router) {
 });
 $router->post('/setup', 'EquipmentController@setupMutations');
 
-
 $router->group(['prefix' => 'equipment/statuses'], function ($route) {
     $route->get('/', 'EquipmentStatusesController@index');
     $route->post('/', 'EquipmentStatusesController@store');
